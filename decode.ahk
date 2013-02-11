@@ -1,5 +1,5 @@
 #Include encodeDecode.ahk
+#Include Utility.ahk
 
-e = %1%
-v := Dec_Albhed(e)
-FileAppend, %v%, *
+x = %1%
+FileAppend % Dec_Albhed(x), *
