@@ -1,5 +1,6 @@
 # Description of sample scripts
 - - -
+**AutoHotkey.ahk** - My global AutoHotkey script
 **decode.cmd** - Windows cmd/batch file to run decode.ahk on a value
 **decode.ahk** - Decode a value
 **encode.cmd** - Windows cmd/batch file to run encode.ahk on a value
