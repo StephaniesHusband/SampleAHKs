@@ -12,7 +12,7 @@ BlockInput, SendAndMouse
    CustomColor = 000000
    MuteColor=0x0000ff
    MicLocX = 156
-   MicLocY = 130
+   MicLocY = 122
    WinSizeX = 180
    WinSizeY = 375
 

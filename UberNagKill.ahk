@@ -1,5 +1,7 @@
 #SingleInstance force
 
+;SetTitleMatchMode, 3 ; exact match
+
 Menu, Tray, Icon, ubernagkill.Ico
 GroupAdd, waitOnThese, (901) 263-6338 - chat - stephanieshusband@gmail.com
 GroupAdd, waitOnThese, Problem Occurred
@@ -14,7 +16,7 @@ GroupAdd, waitOnThese, Microsoft Outlook Security Notice
 GroupAdd, waitOnThese, Java Security Warning
 GroupAdd, waitOnThese, Enterprise Password
 GroupAdd, waitOnThese, Login to Primavera Timesheets
-GroupAdd, waitOnThese, SSO Login - 
+GroupAdd, waitOnThese, SSO Login - Mozilla Firefox
 GroupAdd, waitOnThese, loadzilla login - Mozilla Firefox
 GroupAdd, waitOnThese, Information
 GroupAdd, waitOnThese, Login, Sym4a.Prod.fedex.com
@@ -35,6 +37,7 @@ GroupAdd, waitOnThese, Authentication Required
 ;#Include c:\bin\ScreenCapture.ahk
 
 doCPECLogin = true
+doGmailMute = true
 
 Loop
 {
@@ -79,9 +82,9 @@ Loop
    ;---------------------------------------------------------------------------------------
    ; Needs UserIdAndPassword only (no pauses)
    ;---------------------------------------------------------------------------------------
-   if WinActive("SSO Login -") or WinActive("Authentication Required")
+   if WinActive("SSO Login - Mozilla Firefox") or WinActive("Authentication Required")
    {
-      Sleep, 1000
+      Sleep, 1800
       UserIdAndPassword()
       WinWaitClose
       Continue
@@ -92,6 +95,12 @@ Loop
    IfWinActive, Login, Sym4a.Prod.fedex.com
    {
       PasswordOnly()
+      Continue
+   }
+   IfWinActive, Login
+   {
+      PasswordOnly()
+      WinWaitClose
       Continue
    }
    IfWinActive, Trial Version
@@ -131,8 +140,6 @@ Loop
       }
       Else
       {
-         ;CaptureScreen(1) ; saved to screen.bmp in script dir (c:\bin)
-
          IfWinNotExist, eGrid.png
          {
             Run, c:\users\263952\desktop\eGrid.png
@@ -156,16 +163,25 @@ Loop
    IfWinActive, WD SmartWare Drive Unlock
    {
       Send, fedex{ENTER}
+      Continue
    }
    IfWinActive, (901) 263-6338 - chat - stephanieshusband@gmail.com
    {
-      IfWinNotExist, GmailCallMute.ahk
+      If doGmailMute = true 
       {
-         Run, GmailCallMute.ahk
-         Sleep, 800
-         Send, #s
-         Sleep, 800
+         IfWinNotExist, GmailCallMute.ahk
+         {
+            Run, GmailCallMute.ahk
+            Sleep, 1000
+            Send, #s
+            Sleep, 800
+         }
+
+         ; turn flag back on after 5 minutes
+         SetTimer, ResetGmailMute, 300000
+         doGmailMute = false
       }
+      Continue
    }
 ;   IfWinActive, Delete Browsing History
 ;   {
@@ -184,4 +200,8 @@ Loop
 ;-----------------------------------------------------
 ResetCheckPointTimer:
    doCPECLogin = true
-return
+Return
+
+ResetGmailMute:
+   doGmailMute = true
+Return
