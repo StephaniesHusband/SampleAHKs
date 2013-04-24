@@ -6,8 +6,6 @@ SetTitleMatchMode, 2
 ; block user mouse movement since we're dorking with the mouse pointer
 BlockInput, SendAndMouse
 
-#Include, c:\bin\Utility.ahk
-
 #s::
    CustomColor = 000000
    MuteColor=0x0000ff
@@ -43,24 +41,6 @@ BlockInput, SendAndMouse
    {
       Gosub UNMUTED
    }
-Return
-
-#!d::
-
-   id := GetClipboard()
-
-   IfWinExist, chat - stephanieshusband@gmail.com - Mozilla Firefox
-      WinActivate ; use the window found above
-   else
-      Gosub, NOWINDOW
-   Sleep, 2000
-
-   Loop, Parse, id
-   {
-      Send, %A_LoopField%
-      Sleep, 500
-   }
-   Send, #
 Return
 
 ;----------------------------------------------
