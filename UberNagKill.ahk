@@ -85,6 +85,7 @@ Loop
    if WinActive("SSO Login - Mozilla Firefox") or WinActive("Authentication Required")
    {
       Sleep, 1800
+      SelectAll()
       UserIdAndPassword()
       WinWaitClose
       Continue

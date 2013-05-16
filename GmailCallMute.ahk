@@ -6,11 +6,13 @@ SetTitleMatchMode, 2
 ; block user mouse movement since we're dorking with the mouse pointer
 BlockInput, SendAndMouse
 
+Menu, Tray, Icon, gmailCallUnMuted.ico
+
 #s::
    CustomColor = 000000
    MuteColor=0x0000ff
    MicLocX = 156
-   MicLocY = 122
+   MicLocY = 124
    WinSizeX = 180
    WinSizeY = 375
 
@@ -18,7 +20,8 @@ BlockInput, SendAndMouse
    IfWinExist, chat - stephanieshusband@gmail.com - Mozilla Firefox
       WinActivate ; use the window found above
    else
-      Gosub, NOWINDOW
+      Return
+      ;Gosub, NOWINDOW
 
    ; set the size of the window so we know exactly where the mute button is to click
    WinMove,,,,,%WinSizeX%,%WinSizeY%
@@ -65,6 +68,8 @@ MUTED:
 
    ; show the window
    Gui,Show,x%xpos% y%ypos% w%width% h%height% NoActivate
+
+   Menu, Tray, Icon, gmailCallMuted.ico
 Return
 
 ;----------------------------------------------
@@ -84,6 +89,8 @@ UNMUTED:
    ypos:=ypos+120
 
    Gui,Show,x%xpos% y%ypos% w%width% h%height% NoActivate
+
+   Menu, Tray, Icon, gmailCallUnMuted.ico
 Return
 
 ;----------------------------------------------
