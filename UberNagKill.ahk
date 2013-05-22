@@ -34,7 +34,7 @@ GroupAdd, waitOnThese, Authentication Required
 #Include C:\bin
 #Include Utility.ahk
 #Include UserAndPwd.ahk
-;#Include c:\bin\ScreenCapture.ahk
+#Include eGrid.ahk
 
 doCPECLogin = true
 doGmailMute = true
@@ -138,6 +138,10 @@ Loop
 
          ; wait 5 minutes before resetting flag
          SetTimer, ResetCheckPointTimer, 300000
+
+         WinWaitActive
+
+         EnterEgrid()
       }
       Else
       {

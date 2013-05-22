@@ -21,6 +21,7 @@ Menu, Tray, Icon, gmailCallUnMuted.ico
       WinActivate ; use the window found above
    else
       Return
+      Gui, Hide
       ;Gosub, NOWINDOW
 
    ; set the size of the window so we know exactly where the mute button is to click
