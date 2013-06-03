@@ -132,23 +132,16 @@ Loop
       {
          PasswordOnly()
 
-         WinWaitClose
-
          doCPECLogin = false
 
          ; wait 5 minutes before resetting flag
          SetTimer, ResetCheckPointTimer, 300000
 
-         WinWaitActive
-
-         EnterEgrid()
+         WinWaitClose
       }
       Else
       {
-         IfWinNotExist, eGrid.png
-         {
-            Run, c:\users\263952\desktop\eGrid.png
-         }
+         EnterEGrid()
       }
       Continue
    }

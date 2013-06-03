@@ -2,32 +2,42 @@
 #Include RXMS.ahk ; RegEx Match & Split 
 #Include myEGrid.ahk ; This is YOUR egrid file in the form of an associative array called "eGrid"
 
-; Example eGrid associative array where V = the actual Value at that grid point e.g., A1=V
-
 ;-----------------------------------------------------------------------------------------------------------------------------
 ; Function
 ;-----------------------------------------------------------------------------------------------------------------------------
-EnterEgrid()
+EnterEGrid(debug=False)
 {
-   WinActivate, Check Point Mobile
-   MouseClick, left, 195, 238
-   Clipboard =
-   ControlSend,,^a,ahk_class QWidget
-   ControlSend,,^c,ahk_class QWidget
-   ClipWait,2
+   Global
 
-   code := Clipboard
+   If (debug)
+   {
+      code := "Enter a response to the grid challenge [A5] [B3] [J5] using a card with serial number 238117."
+   }
+   Else
+   {
+      Clipboard =
+      WinActivate, Check Point Mobile
+      MouseClick, left, 195, 238
+      ControlSend,,^a,ahk_class QWidget
+      Sleep, 1000
+      ControlSend,,^c,ahk_class QWidget
+      Sleep, 1000
 
-   ; Example message
-   ;code = Enter a response to the grid challenge [A5] [C5] [G2] using a card with serial number 238117.
+      code := Clipboard
+   }
 
-   RXMS(code, "\[([A-Z][0-9])\]", "p mVars")
+   RXMS(code, "\[([A-Z][0-9])\]", "p mVrs")
 
-   a := eGrid[Vars1]
-   b := eGrid[Vars2]
-   c := eGrid[Vars3]
+   a := eGrid[Vrs1]
+   b := eGrid[Vrs2]
+   c := eGrid[Vrs3]
 
-   SendInput, {TAB}%a%%b%%c%{ENTER}
+   If (debug)
+   {
+      MsgBox, a=%a%, b=%b%, c=%c%
+   }
+   Else
+      SendInput, {TAB}%a%%b%%c%{ENTER}
 
-   Return
+   WinWaitClose
 }
