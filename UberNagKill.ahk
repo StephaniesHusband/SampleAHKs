@@ -31,7 +31,6 @@ GroupAdd, waitOnThese, Authentication Required
 ;GroupAdd, waitOnThese, Delete Browsing History
 ;GroupAdd, waitOnThese, Clear Recent History
 
-#Include C:\bin
 #Include Utility.ahk
 #Include UserAndPwd.ahk
 #Include eGrid.ahk
@@ -132,23 +131,16 @@ Loop
       {
          PasswordOnly()
 
-         WinWaitClose
-
          doCPECLogin = false
 
          ; wait 5 minutes before resetting flag
          SetTimer, ResetCheckPointTimer, 300000
 
-         WinWaitActive
-
-         EnterEgrid()
+         WinWaitClose
       }
       Else
       {
-         IfWinNotExist, eGrid.png
-         {
-            Run, c:\users\263952\desktop\eGrid.png
-         }
+         EnterEGrid()
       }
       Continue
    }

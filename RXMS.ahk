@@ -17,6 +17,7 @@ RXMS(ByRef _String, _Needle, _Options="") ; http://www.autohotkey.com/forum/view
 	;---------------------------------USER CONFIGURATIONS:-----------------------------------------------
 	, _UserConfig_Foo := "bar"
 	;----------------------------------------------------------------------------------------------------
+
 	While (_5 := RegExMatch(_Options, "i)(?:^|\s)(?:!(\w+)|(\+|-)?(" _Commands ")(" _Literal "(?:[^" _Literal "]|" _Literal _Literal ")*" _Literal "(?=\s|$)|\S*))", _, _5 + StrLen(_)))
 		If (_1 <> "")
 			_Options := SubStr(_Options, 1, _5 + StrLen(_)) _UserConfig_%_1% SubStr(_Options, _5 + StrLen(_))
