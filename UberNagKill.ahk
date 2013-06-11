@@ -28,19 +28,21 @@ GroupAdd, waitOnthese, Web Server Authentication
 GroupAdd, waitOnThese, Proxy Authentication
 GroupAdd, waitOnThese, WD SmartWare Drive Unlock 
 GroupAdd, waitOnThese, Authentication Required
-;GroupAdd, waitOnThese, Delete Browsing History
-;GroupAdd, waitOnThese, Clear Recent History
+GroupAdd, waitOnThese, HP Application Lifecycle Management
 
-#Include c:\users\263952\bin
+#Include c:\Bin
 #Include Utility.ahk
 #Include UserAndPwd.ahk
 #Include eGrid.ahk
 
 doCPECLogin = true
 doGmailMute = true
+doQC = true
 
+; Separator
 Menu, tray, Add,
 Menu, tray, Add, Reset eGrid Timer, ResetCheckPointTimer
+Menu, tray, Add, Reset QC Login Timer, ResetQCLoginTimer
 
 Loop
 {
@@ -185,16 +187,20 @@ Loop
       }
       Continue
    }
-;   IfWinActive, Delete Browsing History
-;   {
-;      Send, !d
-;      WinWaitClose, Delete Browsing History
-;   }
-;   IfWinActive, Clear Recent History
-;   {
-;      Send, {ENTER}
-;      Continue
-;   }
+   IfWinActive, HP Application Lifecycle Management
+   {
+      If doQC = true 
+      {
+         doQC = false
+
+         Sleep, 3000
+         Send, {TAB}
+         SelectAll()
+         PasswordOnly()
+      }
+
+      Continue
+   }
 }
 
 ;-----------------------------------------------------
@@ -206,4 +212,8 @@ Return
 
 ResetGmailMute:
    doGmailMute = true
+Return
+
+ResetQCLoginTimer:
+   doQC = true
 Return
