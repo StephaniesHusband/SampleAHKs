@@ -18,19 +18,11 @@ EnterEGrid(debug=False)
       Clipboard =
       WinActivate, Check Point Mobile
       MouseClick, left, 195, 238
-<<<<<<< HEAD
       Sleep, 1000
-      ;ControlSend,,^a,ahk_class QWidget
       SendInput, ^a
-      Sleep, 1000
-      ;ControlSend,,^c,ahk_class QWidget
+      Sleep, 500
       SendInput, ^c
-=======
-      ControlSend,,^a,ahk_class QWidget
-      Sleep, 1000
-      ControlSend,,^c,ahk_class QWidget
->>>>>>> e32fc380df7895739d248eae9bcaa1e9d0567d3b
-      Sleep, 1000
+      ClipWait, 2
 
       code := Clipboard
    }

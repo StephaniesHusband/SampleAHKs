@@ -31,12 +31,16 @@ GroupAdd, waitOnThese, Authentication Required
 ;GroupAdd, waitOnThese, Delete Browsing History
 ;GroupAdd, waitOnThese, Clear Recent History
 
+#Include c:\users\263952\bin
 #Include Utility.ahk
 #Include UserAndPwd.ahk
 #Include eGrid.ahk
 
 doCPECLogin = true
 doGmailMute = true
+
+Menu, tray, Add,
+Menu, tray, Add, Reset eGrid Timer, ResetCheckPointTimer
 
 Loop
 {
@@ -112,6 +116,7 @@ Loop
    {
       Sleep, 1000
       SendInput, +{TAB}
+      SelectAll()
       UserIdOnly()
       WinWaitActive
       SelectAll()
@@ -129,12 +134,12 @@ Loop
    {
       If doCPECLogin = true
       {
-         PasswordOnly()
-
          doCPECLogin = false
 
          ; wait 5 minutes before resetting flag
-         SetTimer, ResetCheckPointTimer, 300000
+         SetTimer, ResetCheckPointTimer, 30000
+
+         PasswordOnly()
 
          WinWaitClose
       }
@@ -175,7 +180,7 @@ Loop
          }
 
          ; turn flag back on after 5 minutes
-         SetTimer, ResetGmailMute, 300000
+         SetTimer, ResetGmailMute, 30000
          doGmailMute = false
       }
       Continue
