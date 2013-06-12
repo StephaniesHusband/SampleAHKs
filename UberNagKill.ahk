@@ -193,7 +193,7 @@ Loop
       {
          doQC = false
 
-         Sleep, 3000
+         Sleep, 4000
          Send, {TAB}
          SelectAll()
          PasswordOnly()
