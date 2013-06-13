@@ -193,7 +193,14 @@ Loop
       {
          doQC = false
 
-         Sleep, 4000
+         Clipboard=
+
+         Loop
+         {
+            Sleep, 500
+            SelectAll()
+         } Until (GetClipboard() == "263952")
+
          Send, {TAB}
          SelectAll()
          PasswordOnly()
