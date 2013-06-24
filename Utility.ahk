@@ -4,13 +4,39 @@ GetClipboard()
 {
    Clipboard=
    SendInput, ^c
-   ClipWait
-   id := RegExReplace(Clipboard, "^\s+|\s+$")
-   Return id
+   ClipWait, 1
+   cb := Trim(Clipboard)
+   Return cb 
 }
 
 SelectAll()
 {
-   SendInput, ^a ;{HOME}{SHIFTDOWN}{END}{SHIFTUP}
+   SendInput, ^a
    Return
+}
+
+ClipWaitForText(waitForMe, waitMax)
+{
+   waitInterval = 500 ; milliseconds
+   waitTimer = %waitInc%
+
+   While waitTimer < waitMax
+   {
+      SelectAll()
+      cb := GetClipboard()
+
+      ;MsgBox, %cb% %waitForMe%
+
+      IfInString, cb, %waitForMe%
+      {
+         Return True
+      }
+      Else
+      {
+         Sleep, %waitInterval%
+         waitTimer += waitInterval
+      }
+   }
+
+   Return False
 }
