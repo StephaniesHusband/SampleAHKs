@@ -10,6 +10,7 @@ GroupAdd, waitOnThese, Error with license
 GroupAdd, waitOnThese, viPlugin
 GroupAdd, waitOnThese, Demo version
 GroupAdd, waitOnThese, Welcome to viPlugin for Eclipse
+GroupAdd, waitOnThese, Welcome to ScriptEclipse
 GroupAdd, waitOnThese, VPN Client Banner
 GroupAdd, waitOnThese, Microsoft Office Outlook Security Notice
 GroupAdd, waitOnThese, Microsoft Outlook Security Notice
@@ -23,7 +24,6 @@ GroupAdd, waitOnThese, Login, Sym4a.Prod.fedex.com
 GroupAdd, waitOnThese, Check Point Mobile
 GroupAdd, waitOnThese, SSL Certificate Verification
 GroupAdd, waitOnThese, Remove Activity
-GroupAdd, waitOnThese, Create PDF
 GroupAdd, waitOnthese, Web Server Authentication
 GroupAdd, waitOnThese, Proxy Authentication
 GroupAdd, waitOnThese, WD SmartWare Drive Unlock 
@@ -66,6 +66,12 @@ Loop
       WinWaitClose
       Continue
    }
+   If WinActive("Welcome to ScriptEclipse")
+   {
+      Send, {ESC}
+      WinWaitClose
+      Continue
+   }
    ;---------------------------------------------------------------------------------------
    ; Needs {ESC} only
    ;---------------------------------------------------------------------------------------
@@ -87,9 +93,20 @@ Loop
    ;---------------------------------------------------------------------------------------
    ; Needs UserIdAndPassword only (no pauses)
    ;---------------------------------------------------------------------------------------
-   if WinActive("SSO Login - Mozilla Firefox") or WinActive("Authentication Required")
+   if WinActive("SSO Login - Mozilla Firefox")
    {
-      Sleep, 1800
+      ;Sleep, 1800
+      If ClipWaitForText("Please do not bookmark this page", 10000) ; 10 seconds
+      {
+         SelectAll()
+         Send, {TAB}
+         UserIdAndPassword()
+         WinWaitClose
+      }
+      Continue
+   }
+   if WinActive("Authentication Required")
+   {
       SelectAll()
       UserIdAndPassword()
       WinWaitClose
@@ -149,19 +166,6 @@ Loop
       {
          EnterEGrid()
       }
-      Continue
-   }
-   IfWinActive, Create PDF
-   {
-      Sleep, 1000
-      Send, {TAB 9}{ENTER}
-      Sleep, 500
-      IfWinActive, Nitro PDF Reader
-      {
-         Send, {TAB}{SPACE}
-         WinWaitClose
-      }
-      WinWaitClose, Create PDF
       Continue
    }
    IfWinActive, WD SmartWare Drive Unlock
