@@ -17,7 +17,7 @@ Menu, Tray, Icon, gmailCallUnMuted.ico
    WinSizeY = 375
 
    ; if chat window up, activate it, else error out
-   IfWinExist, chat - stephanieshusband@gmail.com - Mozilla Firefox
+   IfWinExist, chat - stephanieshusband@gmail.com - 
       WinActivate ; use the window found above
    else
       Return
@@ -62,7 +62,7 @@ MUTED:
    ; set the text of the control
    GuiControl,,MyText,x
 
-   WinGetPos,xpos,ypos,width,height,chat - stephanieshusband@gmail.com - Mozilla Firefox
+   WinGetPos,xpos,ypos,width,height,chat - stephanieshusband@gmail.com - 
 
    xpos:=xpos-10
    ypos:=ypos+130
@@ -84,7 +84,7 @@ UNMUTED:
    ;GuiControl,,MyText, UNMUTED
    GuiControl,,MyText,a
 
-   WinGetPos,xpos,ypos,width,height,chat - stephanieshusband@gmail.com - Mozilla Firefox
+   WinGetPos,xpos,ypos,width,height,chat - stephanieshusband@gmail.com - 
 
    xpos:=xpos-5
    ypos:=ypos+120

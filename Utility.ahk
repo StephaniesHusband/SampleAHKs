@@ -40,3 +40,38 @@ ClipWaitForText(waitForMe, waitMax)
 
    Return False
 }
+
+FindInFlashBuilder(what)
+{
+   If (what = "id" || what = "string")
+   {
+      wrd := GetClipboard()
+      SetTitleMatchMode, 2
+      WinWait, Flash Builder
+      IfWinNotActive, Flash Builder, , WinActivate, Flash Builder
+      WinWaitActive, Flash Builder,
+      Send, ^+f
+      WinWait, Search
+      Send, {TAB 3}
+      Send, *.as, *.mxml
+      Send, {SHIFTDOWN}{TAB 3}{SHIFTUP}
+
+      If (what = "id")
+      {
+         Send, id="\b%clipboard%\b"
+      }
+      Else If (what = "string")
+      {
+         Send, \b%clipboard%\b
+      }
+      Send, {ENTER}
+   }
+   Else If (what = "resourceKey")
+   {
+      Send, ^+f
+      WinWaitActive, Search
+      Send, {TAB 3}
+      Send, *.properties
+      Send, {SHIFTDOWN}{TAB 3}{SHIFTUP}
+   }
+}

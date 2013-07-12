@@ -17,8 +17,8 @@ GroupAdd, waitOnThese, Microsoft Outlook Security Notice
 GroupAdd, waitOnThese, Java Security Warning
 GroupAdd, waitOnThese, Enterprise Password
 GroupAdd, waitOnThese, Login to Primavera Timesheets
-GroupAdd, waitOnThese, SSO Login - Mozilla Firefox
-GroupAdd, waitOnThese, loadzilla login - Mozilla Firefox
+GroupAdd, waitOnThese, SSO Login - 
+GroupAdd, waitOnThese, loadzilla login - 
 GroupAdd, waitOnThese, Information
 GroupAdd, waitOnThese, Login, Sym4a.Prod.fedex.com
 GroupAdd, waitOnThese, Check Point Mobile
@@ -93,9 +93,9 @@ Loop
    ;---------------------------------------------------------------------------------------
    ; Needs UserIdAndPassword only (no pauses)
    ;---------------------------------------------------------------------------------------
-   if WinActive("SSO Login - Mozilla Firefox")
+   if WinActive("SSO Login - ")
    {
-      ;Sleep, 1800
+      Send, +{TAB}
       If ClipWaitForText("Please do not bookmark this page", 10000) ; 10 seconds
       {
          SelectAll()
@@ -142,7 +142,7 @@ Loop
       PasswordOnly()
       Continue
    }
-   IfWinActive, loadzilla login - Mozilla Firefox
+   IfWinActive, loadzilla login -
    {
       Send, {TAB 3}se
       UserIdAndPassword()
