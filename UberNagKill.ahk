@@ -43,6 +43,7 @@ doQC = true
 Menu, tray, Add,
 Menu, tray, Add, Reset eGrid Timer, ResetCheckPointTimer
 Menu, tray, Add, Reset QC Login Timer, ResetQCLoginTimer
+Menu, tray, Add, eGrid It!, RunEnterEGrid
 
 Loop
 {
@@ -93,12 +94,13 @@ Loop
    ;---------------------------------------------------------------------------------------
    ; Needs UserIdAndPassword only (no pauses)
    ;---------------------------------------------------------------------------------------
-   if WinActive("SSO Login - ")
+   if WinActive("SSO Login")
    {
-      Send, +{TAB}
-      If ClipWaitForText("Please do not bookmark this page", 10000) ; 10 seconds
+      MouseClick, left, 650, 300
+      If ClipWaitForText("Please do not bookmark this page", 8000) ; 8 seconds
       {
-         SelectAll()
+         ;SelectAll()
+         ;Send, {SHIFT DOWN}{TAB 4}{SHIFT UP}
          Send, {TAB}
          UserIdAndPassword()
          WinWaitClose
@@ -227,4 +229,8 @@ Return
 
 ResetQCLoginTimer:
    doQC = true
+Return
+
+RunEnterEGrid:
+   EnterEGrid()
 Return
