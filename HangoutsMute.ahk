@@ -64,8 +64,8 @@ MUTED:
 
    WinGetPos,xpos,ypos,width,height, %WinTitle%
 
-   xpos:=0;xpos-10
-   ypos:=0;ypos+130
+   xpos:=0
+   ypos:=0
 
    ; show the window
    Gui,Show,x%xpos% y%ypos% w%width% h%height% NoActivate
@@ -86,8 +86,8 @@ UNMUTED:
 
    WinGetPos,xpos,ypos,width,height,%WinTitle%
 
-   xpos:=0;xpos-5
-   ypos:=0;ypos+120
+   xpos:=0
+   ypos:=0
 
    Gui,Show,x%xpos% y%ypos% w%width% h%height% NoActivate
 

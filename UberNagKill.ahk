@@ -43,6 +43,7 @@ doQC = true
 Menu, tray, Add,
 Menu, tray, Add, Reset eGrid Timer, ResetCheckPointTimer
 Menu, tray, Add, Reset QC Login Timer, ResetQCLoginTimer
+Menu, tray, Add, Turn OFF QC Login Timer, TurnOffQCLoginTimer
 Menu, tray, Add, eGrid It!, RunEnterEGrid
 
 Loop
@@ -197,19 +198,22 @@ Loop
    {
       If doQC = true 
       {
-         doQC = false
-
          Clipboard=
 
          Loop
          {
             Sleep, 500
             SelectAll()
-         } Until (GetClipboard() == "263952")
+         } Until (GetClipboard() == "263952" or doQC = false)
 
-         Send, {TAB}
-         SelectAll()
-         PasswordOnly()
+         If doQC = true
+         {
+            doQC = false
+
+            Send, {TAB}
+            SelectAll()
+            PasswordOnly()
+         }
       }
 
       Continue
@@ -229,6 +233,10 @@ Return
 
 ResetQCLoginTimer:
    doQC = true
+Return
+
+TurnOffQCLoginTimer:
+   doQC = false
 Return
 
 RunEnterEGrid:
