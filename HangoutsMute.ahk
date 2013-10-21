@@ -3,6 +3,8 @@
 ; match title "contains" string
 SetTitleMatchMode, 2
 
+#Include c:\bin
+
 ; block user mouse movement since we're dorking with the mouse pointer
 BlockInput, SendAndMouse
 
@@ -45,6 +47,8 @@ Menu, Tray, Icon, gmailCallUnMuted.ico
    {
       Gosub UNMUTED
    }
+
+   WinMinimize, %WinTitle%
 Return
 
 ;----------------------------------------------
@@ -70,7 +74,7 @@ MUTED:
    ; show the window
    Gui,Show,x%xpos% y%ypos% w%width% h%height% NoActivate
 
-   Menu, Tray, Icon, gmailCallMuted.ico
+   Menu, Tray, Icon, gmailCallMuted.Ico
 Return
 
 ;----------------------------------------------
