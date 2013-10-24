@@ -7,6 +7,8 @@
 
 SetTitleMatchMode, RegEx
 
+#Include c:\bin
+
 Menu, Tray, Icon, outlookvimctrls.ico
 
 
