@@ -30,6 +30,7 @@ Menu, Tray, Icon, gmailCallUnMuted.ico
    ;WinMove,,,,,%WinSizeX%,%WinSizeY%
 
    ; click the mute button
+   MouseMove, %MicLocX%+2, %MicLocY%
    MouseClick, left, %MicLocX%, %MicLocY%
 
    ; take a little nap
@@ -49,7 +50,7 @@ Menu, Tray, Icon, gmailCallUnMuted.ico
    }
 
    ; take a little nap
-   Sleep 700
+   Sleep 500
 
    WinMinimize, %WinTitle%
 Return
