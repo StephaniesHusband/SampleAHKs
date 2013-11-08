@@ -12,9 +12,9 @@ Menu, Tray, Icon, gmailCallUnMuted.ico
 
 #s::
    CustomColor = 000000 
-   MuteColor=0x2c35ce ; reddish
-   MicLocX = 794
-   MicLocY = 80
+   MuteColor=0x2d37b0 ; reddish
+   MicLocX = 447
+   MicLocY = 109
    WinTitle = Google+ Hangouts
    ;WinSizeX = 180
    ;WinSizeY = 375
@@ -33,7 +33,7 @@ Menu, Tray, Icon, gmailCallUnMuted.ico
    MouseClick, left, %MicLocX%, %MicLocY%
 
    ; take a little nap
-   Sleep 500
+   Sleep 600
 
    ; what color is under the cursor now?
    PixelGetColor, color, %MicLocX%, %MicLocY%
@@ -47,6 +47,9 @@ Menu, Tray, Icon, gmailCallUnMuted.ico
    {
       Gosub UNMUTED
    }
+
+   ; take a little nap
+   Sleep 700
 
    WinMinimize, %WinTitle%
 Return
