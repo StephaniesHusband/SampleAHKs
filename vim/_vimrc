@@ -1,0 +1,254 @@
+"*******************************************************************************
+"*******************************************************************************
+"**                       |    | --- |\  /| .--. .--.                         **
+"**                       |    |  |  | \/ | |__' |                            **
+"**                        \  /   |  |    | | \  |                            **
+"**                       o \/   --- |    | |  \ `--'                         **
+"**                                                                           **
+"**                     Macros & Miscellaneous Settings                       **
+"*******************************************************************************
+"*******************************************************************************
+syntax on
+filetype plugin indent on
+
+"-------------------------------------------------------------------------------
+" Pathogen.vim settings
+"-------------------------------------------------------------------------------
+execute pathogen#infect()
+"let g:user_emmet_expandabbr_key='<c-space>'
+"let g:user_emmet_complete_tag=1
+execute pathogen#helptags()
+
+let g:vim_json_syntax_conceal=0
+
+" Flex property files. Setup the Align script
+au BufEnter *.properties let alignctrl=Align#AlignCtrl("l:")
+
+" This is for ProCease (AHK) artifacts files
+au BufEnter artifacts.txt set tabstop=15 formatoptions=croql cindent comments=n:;
+
+" ??
+highlight Pmenu ctermbg=Gray guibg=Gray
+highlight PmenuSel guibg=DarkBlue ctermbg=DarkBlue guifg=Yellow ctermfg=Yellow
+
+"-------------------------------------------------------------------------------
+" Auto Correct Common Misspellings:
+"-------------------------------------------------------------------------------
+:cab wq1 wq!
+:cab q1 q!
+
+"-------------------------------------------------------------------------------
+" Plugin Settings:
+"-------------------------------------------------------------------------------
+let Tlist_Ctags_Cmd="$BIN/ctags.exe"
+vnoremap <c-a> :Inc<CR> 
+
+"-------------------------------------------------------------------------------
+" FUNCTION KEYS:
+"-------------------------------------------------------------------------------
+noremap <F4> :echo synIDattr(synID(line("."), col("."), 1), "name")<CR>
+noremap <F5> :call ToggleOption('hlsearch')<CR>
+noremap <F7> :bNext<CR>     " Previous buffer
+noremap <F8> :bnext<CR>     " Next buffer
+
+"-------------------------------------------------------------------------------
+" QUICK FILE LIST:
+" Show file list of commonly used files from quick list file
+"-------------------------------------------------------------------------------
+ru CQuickFileList.src
+au BufEnter,BufNewFile * nnoremap [f :sp $BIN/QuickFileList<CR>/SHIPNET/+2<CR>
+
+"-------------------------------------------------------------------------------
+" QUIT CURRENT BUFFER: [q
+"  Immediately exit the current buffer without saving it.
+"-------------------------------------------------------------------------------
+nnoremap [q :bd!<CR>
+
+"-------------------------------------------------------------------------------
+" SUBSTITUTE SHORTHAND:
+"  Just a shorthand for starting the substitute command on the whole file
+"-------------------------------------------------------------------------------
+nnoremap S yiw:%s/\<<C-R>"\>/
+vnoremap S :s/
+
+"-------------------------------------------------------------------------------
+" FORMAT DOCUMENT:
+"  Replace tabs with 3 spaces & remove trailing spaces. Must insert
+"  control character to find original line because can't use marks because
+"  'expand' erases them.
+"-------------------------------------------------------------------------------
+noremap ,f :call Format()<CR>
+";au BufEnter *.html* noremap ,f :call HtmlFormat()<CR>
+
+"-------------------------------------------------------------------------------
+" LIST CURRENT FILE LIST AND PROMPT FOR JUMP: [l
+"-------------------------------------------------------------------------------
+noremap [l :ls<CR>:sp #
+noremap [L :ls<CR>:e #
+
+"-------------------------------------------------------------------------------
+" Replace the currently selected visual area with whatever you just yanked.
+"-------------------------------------------------------------------------------
+vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
+
+"-------------------------------------------------------------------------------
+" Scroll top and bottom windows simultaneously
+"-------------------------------------------------------------------------------
+nnoremap Œ– <C-E><C-W><C-W><C-E><C-W><C-W>  " Ctrl-Down
+nnoremap Œ≈ <C-Y><C-W><C-W><C-Y><C-W><C-W>  " Ctrl-Up
+
+"-------------------------------------------------------------------------------
+" Inserts blank line below/above current line and stays in on current line and
+" in command mode.
+"-------------------------------------------------------------------------------
+nmap oo o<ESC>k
+nmap OO O<ESC>j
+
+"-------------------------------------------------------------------------------
+" Alt+Cursor Up and Down - Goes to next/previous error
+"-------------------------------------------------------------------------------
+nmap Œ— :cn<CR>    " Alt+Down
+nmap Œ∆ :cp<CR>    " Alt+Up
+
+"===============================================================================
+"                                 VIM SETTINGS
+"===============================================================================
+version 4.0                   " Avoid warning for wrong version
+set clipboard=unnamed
+set suffixes+=.clw,.hm   " Put these suffixes at the end of completion code
+set wildignore+=*.aps,.*~,*.txe,*.plg,*.opt
+set nowrap
+set winheight=5               " minimal window height
+set complete=.,w,b,u,U,i,t
+set hlsearch                  " Highlight search string
+set tabstop=3                 " Set tabstops every 3 characters
+set shiftwidth=3              " Set shift width to 3 characters
+set shiftround                " Rounds > & < to nearest shift width
+set autowrite                 " Write file every time ESC is pressed
+set tag+=../tags
+set notagrelative             " use exact path specified in tag file (not rel.)
+set backspace=2               " Allow backspacing over everything in insert mode
+set textwidth=80              " Set width of text
+set viminfo='20,\"50          " read/write a .viminfo file, don't store more
+                              "   than 50 lines of registers
+set visualbell                " Stop that infernal racket!
+set expandtab                 " Expand the tabs to spaces
+set ruler                     " Display the column and line numbers
+set ignorecase                " Ignore case when searching
+set nosmartcase               " Override ignorecase if search pattern contains
+                              "   upper case letters
+set autoindent                " Set autoindenting on
+set smartindent               " Do smart autoindenting
+set smarttab                  " Tab shiftwidth positions in front of lines
+set cmdheight=3               " Command line height
+set comments=fb:*,fb:-,b:\",b:#   " Set comment characteristics for any file
+set formatoptions=trq         " Set comment format options for any file
+set cpoptions=$BceFs          " Vim/Vi settings
+set isfname=@,48-57,/,:,.,-,_,+,,,$,\\,~   " omit quote and add \,~
+"set shellquote=\"             " Surround shell commands with quotes (for long
+"set grepprg=findstr\ /R\ /N\ /S " change grep program to search in subdirs file names)
+set grepprg=grep\ -n
+
+let &path=".," . substitute($INCLUDE, ";", ",", "g")
+
+"-------------------------------------------------------------------------------
+" ERROR FORMAT STRINGS
+"-------------------------------------------------------------------------------
+"-------------------------------------------------------------------------------
+"set errorformat=%f:%l:%m
+
+"===============================================================================
+"                                AUTO COMMANDS
+"===============================================================================
+
+"-------------------------------------------------------------------------------
+" C Files
+"   For *.c and *.h files set formatting of comments and set C-indenting on
+"   For other files switch it off
+"   Don't change the sequence, it's important that the line with * comes first.
+"-------------------------------------------------------------------------------
+au BufEnter * set formatoptions=tcql nocindent
+"au BufEnter jnk set formatoptions=croql comments=b:>
+"au BufEnter *.cpp,*.h,*.sql set formatoptions=croql cindent comments=b://,sr:/*,mnb:*,el:*/ cinoptions=>s,e0,n0,f0,{0,}0,^0,:s,=s,ps,ts,+s,(0,)0,*30
+"au BufEnter *.cpp,*.h,*.sql map [% :call Matching()<CR>
+"au BufEnter *.pl,*.cgi,*.cfg set formatoptions=croql cindent comments=b:#
+"au BufEnter *.x set formatoptions=croql cindent comments=b://
+
+"--------------------
+" Resource files
+"--------------------
+"au BufEnter *.rc set sw=4 ts=4
+"au BufLeave *.rc set sw=3 ts=3
+
+"set makeef=jnk.nmake##
+
+"--------------------
+" Batch files
+"--------------------
+au BufEnter *.bat set comments=b:REM,b:rem formatoptions=croq
+au BufEnter *.bat set keywordprg=help
+
+"--------------------
+" Perl files
+"--------------------
+au FileType perl set formatoptions=croql comments=b:# cinkeys-=0#
+
+"--------------------
+" Vim Source/Macros
+"--------------------
+au BufEnter *.src,vim* set comments=b:\" formatoptions=croq
+"au BufEnter *.src,*.vim,vim* :let sreg=@/nmap [[ ?^fun?:let @/=sreg
+"au BufEnter *.src,*.vim,vim* :let sreg=@/nmap ]] /^fun/:let @/=sreg
+"au BufEnter *.rc nmap [[ :let sreg=expand(@/)?^BEGIN?:let @/=sreg
+"au BufEnter *.rc nmap ]] :let sreg=expand(@/)/^BEGIN/:let @/=sreg
+"au BufLeave *.src,*.vim,vim* nunmap [[
+"au BufLeave *.src,*.vim,vim* nunmap ]]
+"au BufLeave *.rc nunmap [[
+"au BufLeave *.rc nunmap ]]
+
+"-------------------------------------------------------------------------------
+" Grep output window
+"-------------------------------------------------------------------------------
+"au BufEnter,BufNewFile *.grep,grep32.out set isfname-=:
+"au BufEnter,BufNewFile *.grep,grep32.out nnoremap <CR>  g0:call OnGrepCR(expand('<cfile>'))<CR>
+"au BufEnter,BufNewFile *.grep,grep32.out nnoremap <C-]>  g0:call OnGrepCR(expand('<cfile>'))<CR><C-W><C-P>j
+"au BufLeave *.grep,grep32.out nunmap <CR>
+"au BufLeave *.grep,grep32.out set isfname+=:
+
+"-------------------------------------------------------------------------------
+" Doskey abbreviations set up as command line abbreviations - use doskey.awk to
+" recreate.
+"-------------------------------------------------------------------------------
+so $BIN\doskey.vim
+
+"-------------------------------------------------------------------------------
+" My syntax
+"-------------------------------------------------------------------------------
+so $VIM/vimfiles/after/syntax/mysyntax.vim
+
+"===============================================================================
+" I'm testing these...
+"===============================================================================
+vnoremap p "_d:norm ""p<CR>
+vnoremap P "_d:norm ""P<CR>
+inoremap  <ESC>bdwa
+
+" Typo
+cmap e1 e!
+" Big window
+cmap bw set columns=150<CR>
+" Little window
+cmap lw set columns=80<CR>
+
+"function! HtmlFormat()
+"   norm mz
+"   %s/\s\+$//e " Remove trailing whitespace on all lines
+"   %g/^$/d     " Delete empty lines
+"   norm `z3k
+"   echo "Formatting Done!"
+"endf
+
+"command! -range=% -nargs=0 Space2Tab execute "<line1>,<line2>s/^\\( \\{".&ts."\\}\\)\\+/\\=substitute(submatch(0), ' \\{".&ts."\\}', '\\t', 'g')"
+
+au BufNewFile,BufRead *.mxml setfiletype=mxml
+au BufNewFile,BufRead *.as setfiletype=actionscript
