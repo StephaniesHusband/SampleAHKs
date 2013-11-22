@@ -12,9 +12,9 @@ Menu, Tray, Icon, gmailCallUnMuted.ico
 
 #s::
    CustomColor = 000000 
-   MuteColor=0x2d37b0 ; reddish
-   MicLocX = 447
-   MicLocY = 109
+   MuteColor=0x3744db ; reddish
+   MicLocX = 983
+   MicLocY = 784
    WinTitle = Google+ Hangouts
    ;WinSizeX = 180
    ;WinSizeY = 375
@@ -30,8 +30,9 @@ Menu, Tray, Icon, gmailCallUnMuted.ico
    ;WinMove,,,,,%WinSizeX%,%WinSizeY%
 
    ; click the mute button
-   MouseMove, %MicLocX%+2, %MicLocY%
-   MouseClick, left, %MicLocX%, %MicLocY%
+   ;MouseMove, %MicLocX%+2, %MicLocY%
+   ;MouseClick, left, %MicLocX%, %MicLocY%
+   Send, ^d
 
    ; take a little nap
    Sleep 600
