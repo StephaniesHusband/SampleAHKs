@@ -3,7 +3,7 @@
 ; match title "contains" string
 SetTitleMatchMode, 2
 
-#Include c:\bin
+SetWorkingDir, c:\bin
 
 ; block user mouse movement since we're dorking with the mouse pointer
 BlockInput, SendAndMouse

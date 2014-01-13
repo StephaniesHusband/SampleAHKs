@@ -194,30 +194,30 @@ Loop
       }
       Continue
    }
-   IfWinActive, HP Application Lifecycle Management
-   {
-      If doQC = true 
-      {
-         Clipboard=
-
-         Loop
-         {
-            Sleep, 500
-            SelectAll()
-         } Until (GetClipboard() == "263952" or doQC = false)
-
-         If doQC = true
-         {
-            doQC = false
-
-            Send, {TAB}
-            SelectAll()
-            PasswordOnly()
-         }
-      }
-
-      Continue
-   }
+;   IfWinActive, HP Application Lifecycle Management
+;   {
+;      If doQC = true 
+;      {
+;         Clipboard=
+;
+;         Loop
+;         {
+;            Sleep, 500
+;            SelectAll()
+;         } Until (GetClipboard() == "263952" or doQC = false)
+;
+;         If doQC = true
+;         {
+;            doQC = false
+;
+;            Send, {TAB}
+;            SelectAll()
+;            PasswordOnly()
+;         }
+;      }
+;
+;      Continue
+;   }
 }
 
 ;-----------------------------------------------------
