@@ -5,50 +5,43 @@ SetTitleMatchMode, 2
 
 SetWorkingDir, c:\bin
 
-; block user mouse movement since we're dorking with the mouse pointer
+; Block user mouse movement since we're dorking with the mouse pointer
 BlockInput, SendAndMouse
 
-Menu, Tray, Icon, gmailCallUnMuted.ico
+; Add context menu items
+Menu, tray, Add,
+Menu, tray, Add, Toggle Mute, _ToggleMute
+Menu, tray, Add, Hide, _Hide
 
+; Global vars
+CustomColor = 000000 
+MuteColor=0x3744db ; reddish
+MicLocX = 976
+MicLocY = 786
+WinTitle = Google+ Hangouts - Mozilla Firefox
+
+;-----------------------------------------------------------------------------------------------------------------------------
+; Hotkey: Windows Key + s to toggle mute
+;-----------------------------------------------------------------------------------------------------------------------------
 #s::
-   CustomColor = 000000 
-   MuteColor=0x3744db ; reddish
-   MicLocX = 983
-   MicLocY = 784
-   WinTitle = Google+ Hangouts
-   ;WinSizeX = 180
-   ;WinSizeY = 375
-
    ; if chat window up, activate it, else error out
    IfWinExist, %WinTitle%
+   {
       WinActivate ; use the window found above
+   }
    else
+   {
       Return
       Gui, Hide
+   }
 
-   ; set the size of the window so we know exactly where the mute button is to click
-   ;WinMove,,,,,%WinSizeX%,%WinSizeY%
-
-   ; click the mute button
-   ;MouseMove, %MicLocX%+2, %MicLocY%
-   ;MouseClick, left, %MicLocX%, %MicLocY%
+   ; Send Mute Toggle keystroke
    Send, ^d
 
    ; take a little nap
    Sleep 600
 
-   ; what color is under the cursor now?
-   PixelGetColor, color, %MicLocX%, %MicLocY%
-
-   ; if color is red, then we're not muted
-   If (color=MuteColor)
-   {
-      Gosub MUTED
-   }
-   else ; we're unmuted
-   {
-      Gosub UNMUTED
-   }
+   ToggleMute()
 
    ; take a little nap
    Sleep 500
@@ -56,59 +49,37 @@ Menu, Tray, Icon, gmailCallUnMuted.ico
    WinMinimize, %WinTitle%
 Return
 
-;----------------------------------------------
-NOWINDOW:
-   MsgBox,, Error, Call window does not exist!, 3
-ExitApp
+IsMuted()
+{
+   Global
 
-;----------------------------------------------
-MUTED:
-   Gosub CREATEWIN
+   Local color
 
-   ; add the text
-   Gui, Add, Text, vMyText cRed XXXXX YYYYY +Center
+   ; what color is under the cursor now?
+   PixelGetColor, color, %MicLocX%, %MicLocY%
 
-   ; set the text of the control
-   GuiControl,,MyText,x
+   ; if color is red, then we're not muted
+   If (color=MuteColor)
+   {
+      Return True
+   }
+   else ; we're unmuted
+   {
+      Return False
+   }
+}
 
-   WinGetPos,xpos,ypos,width,height, %WinTitle%
+;-----------------------------------------------------------------------------------------------------------------------------
+; Function: CreateIcon
+;-----------------------------------------------------------------------------------------------------------------------------
+CreateIcon()
+{
+   Global
 
-   xpos:=0
-   ypos:=0
+   ; Find the text
+   GuiControlGet, MyText
 
-   ; show the window
-   Gui,Show,x%xpos% y%ypos% w%width% h%height% NoActivate
-
-   Menu, Tray, Icon, gmailCallMuted.Ico
-Return
-
-;----------------------------------------------
-UNMUTED:
-   Gosub CREATEWIN
-
-   ; add the text
-   Gui, Add, Text, vMyText cLime XXXXX YYYYY +Center
-
-   ; set the text of the control
-   ;GuiControl,,MyText, UNMUTED
-   GuiControl,,MyText,a
-
-   WinGetPos,xpos,ypos,width,height,%WinTitle%
-
-   xpos:=0
-   ypos:=0
-
-   Gui,Show,x%xpos% y%ypos% w%width% h%height% NoActivate
-
-   Menu, Tray, Icon, gmailCallUnMuted.ico
-Return
-
-;----------------------------------------------
-CREATEWIN:
-   ; find the text
-   GuiControlGet,MyText
-
-   ; if found, destroy the window
+   ; If found, destroy the window
    If ErrorLevel = 0
    {
       Gui, Destroy
@@ -120,14 +91,67 @@ CREATEWIN:
    Gui, Font, s150, WebDings
    WinMove,,,,,248,80
 
-   ; make window transparent
+   ; Make window transparent
    WinSet, TransColor, %CustomColor% 75
+}
+
+;-----------------------------------------------------------------------------------------------------------------------------
+; Function: ToggleMute
+;-----------------------------------------------------------------------------------------------------------------------------
+ToggleMute()
+{
+   Local b = IsMuted()
+
+   Mute(b)
+}
+
+;-----------------------------------------------------------------------------------------------------------------------------
+; Function: Mute
+;-----------------------------------------------------------------------------------------------------------------------------
+Mute(m)
+{
+   Global
+
+   CreateIcon()
+
+   If (m = True)
+   {
+      Gui, Add, Text, vMyText cRed XXXXX YYYYY +Center
+      Menu, Tray, Icon, HangoutsCallMuted.Ico
+      GuiControl,,MyText,x ; cross out symbol
+   }
+   Else
+   {
+      Gui, Add, Text, vMyText cLime XXXXX YYYYY +Center
+      Menu, Tray, Icon, HangoutsCallUnMuted.Ico
+      GuiControl,,MyText,a ; check symbol
+   }
+
+   Local xpos, ypos, width, height
+
+   WinGetPos,xpos,ypos,width,height, %WinTitle%
+
+   xpos:=0
+   ypos:=0
+
+   Gui,Show,x%xpos% y%ypos% w%width% h%height% NoActivate
+}
+
+;-----------------------------------------------------------------------------------------------------------------------------
+; Function: Hide
+;-----------------------------------------------------------------------------------------------------------------------------
+Hide()
+{
+   Gui, Hide
+}
+
+;-----------------------------------------------------------------------------------------------------------------------------
+; These are needed only for the context menu. It needs labels, not functions.
+;-----------------------------------------------------------------------------------------------------------------------------
+_ToggleMute:
+   ToggleMute()
 Return
 
-;----------------------------------------------
-KILLWIN:
-   Gui, Destroy
+_Hide:
+   Hide()
 Return
-
-GuiClose:
-ExitApp
