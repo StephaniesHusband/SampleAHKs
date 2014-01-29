@@ -20,6 +20,8 @@ MicLocX = 976
 MicLocY = 786
 WinTitle = Google+ Hangouts - Mozilla Firefox
 
+Initialize()
+
 ;-----------------------------------------------------------------------------------------------------------------------------
 ; Hotkey: Windows Key + s to toggle mute
 ;-----------------------------------------------------------------------------------------------------------------------------
@@ -49,6 +51,27 @@ WinTitle = Google+ Hangouts - Mozilla Firefox
    WinMinimize, %WinTitle%
 Return
 
+;-----------------------------------------------------------------------------------------------------------------------------
+; Function: Initialize
+;-----------------------------------------------------------------------------------------------------------------------------
+Initialize()
+{
+   IfWinNotExist, %WinTitle%
+   {
+      Menu, tray, Icon, HangoutsCallUnMuted.ico
+   }
+   Else
+   {
+      If (IsMuted())
+         Menu, tray, Icon, HangoutsCallUnMuted.ico
+      Else
+         Menu, tray, Icon, HangoutsCallMuted.ico
+   }
+}
+
+;-----------------------------------------------------------------------------------------------------------------------------
+; Function: IsMuted
+;-----------------------------------------------------------------------------------------------------------------------------
 IsMuted()
 {
    Global
@@ -149,7 +172,10 @@ Hide()
 ; These are needed only for the context menu. It needs labels, not functions.
 ;-----------------------------------------------------------------------------------------------------------------------------
 _ToggleMute:
-   ToggleMute()
+   IfWinExist, %WinTitle%
+   {
+      ToggleMute()
+   }
 Return
 
 _Hide:
