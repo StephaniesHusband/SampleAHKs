@@ -20,7 +20,7 @@ MicLocX = 976
 MicLocY = 786
 WinTitle = Google+ Hangouts - Mozilla Firefox
 
-Initialize()
+SetIcon()
 
 ;-----------------------------------------------------------------------------------------------------------------------------
 ; Hotkey: Windows Key + s to toggle mute
@@ -52,13 +52,13 @@ Initialize()
 Return
 
 ;-----------------------------------------------------------------------------------------------------------------------------
-; Function: Initialize
+; Function: SetIcon
 ;-----------------------------------------------------------------------------------------------------------------------------
-Initialize()
+SetIcon()
 {
    IfWinNotExist, %WinTitle%
    {
-      Menu, tray, Icon, HangoutsCallUnMuted.ico
+      Menu, tray, Icon, HangoutsHidden.ico
    }
    Else
    {
@@ -140,15 +140,15 @@ Mute(m)
    If (m = True)
    {
       Gui, Add, Text, vMyText cRed XXXXX YYYYY +Center
-      Menu, Tray, Icon, HangoutsCallMuted.Ico
       GuiControl,,MyText,x ; cross out symbol
    }
    Else
    {
       Gui, Add, Text, vMyText cLime XXXXX YYYYY +Center
-      Menu, Tray, Icon, HangoutsCallUnMuted.Ico
       GuiControl,,MyText,a ; check symbol
    }
+
+   SetIcon()
 
    Local xpos, ypos, width, height
 
@@ -166,6 +166,8 @@ Mute(m)
 Hide()
 {
    Gui, Hide
+
+   SetIcon()
 }
 
 ;-----------------------------------------------------------------------------------------------------------------------------
