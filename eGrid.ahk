@@ -17,7 +17,7 @@ EnterEGrid(debug=False)
    {
       Clipboard =
       WinActivate, Check Point Mobile
-      MouseClick, left, 195, 238
+      MouseClick, left, 61, 206
       Sleep, 1000
       SendInput, ^a
       Sleep, 500
