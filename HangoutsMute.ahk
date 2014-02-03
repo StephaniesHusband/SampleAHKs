@@ -63,9 +63,9 @@ SetIcon()
    Else
    {
       If (IsMuted())
-         Menu, tray, Icon, HangoutsCallUnMuted.ico
-      Else
          Menu, tray, Icon, HangoutsCallMuted.ico
+      Else
+         Menu, tray, Icon, HangoutsCallUnMuted.ico
    }
 }
 
