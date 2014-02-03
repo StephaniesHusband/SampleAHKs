@@ -31,6 +31,8 @@ au BufEnter *.properties let alignctrl=Align#AlignCtrl("l:")
 " This is for ProCease (AHK) artifacts files
 au BufEnter artifacts.txt set tabstop=15 formatoptions=croql cindent comments=n:;
 
+au BufEnter */itsalltext/*.txt set textwidth=0 wrap
+
 " ??
 highlight Pmenu ctermbg=Gray guibg=Gray
 highlight PmenuSel guibg=DarkBlue ctermbg=DarkBlue guifg=Yellow ctermfg=Yellow
@@ -118,6 +120,7 @@ nmap ÎÆ :cp<CR>    " Alt+Up
 "                                 VIM SETTINGS
 "===============================================================================
 version 4.0                   " Avoid warning for wrong version
+set shellslash
 set clipboard=unnamed
 set suffixes+=.clw,.hm   " Put these suffixes at the end of completion code
 set wildignore+=*.aps,.*~,*.txe,*.plg,*.opt
