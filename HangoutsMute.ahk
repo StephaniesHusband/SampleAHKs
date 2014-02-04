@@ -30,6 +30,11 @@ SetIcon()
    IfWinExist, %WinTitle%
    {
       WinActivate ; use the window found above
+
+      WinGetPos,,,width,height, %WinTitle%
+
+      MicLocX := width - 58
+      MicLocY := height - 64
    }
    else
    {
