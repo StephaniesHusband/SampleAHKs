@@ -126,7 +126,7 @@ DisplayMuteIndicator()
 
       Gui,Show,x%xpos% y%ypos% w%width% h%height% NoActivate
 
-      SetTaskBarIcon(%m%)
+      SetTaskBarIcon(m)
    }
    else
    {
