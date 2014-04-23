@@ -36,7 +36,6 @@ GroupAdd, waitOnThese, HP Application Lifecycle Management
 #Include eGrid.ahk
 
 doCPECLogin = true
-doGmailMute = true
 doQC = true
 
 ; Separator
@@ -176,24 +175,6 @@ Loop
       Send, fedex{ENTER}
       Continue
    }
-   IfWinActive, (901) 263-6338 - chat - stephanieshusband@gmail.com
-   {
-      If doGmailMute = true 
-      {
-         IfWinNotExist, GmailCallMute.ahk
-         {
-            Run, GmailCallMute.ahk
-            Sleep, 1000
-            Send, #s
-            Sleep, 800
-         }
-
-         ; turn flag back on after 5 minutes
-         SetTimer, ResetGmailMute, 30000
-         doGmailMute = false
-      }
-      Continue
-   }
 ;   IfWinActive, HP Application Lifecycle Management
 ;   {
 ;      If doQC = true 
@@ -224,11 +205,8 @@ Loop
 ; Reset the Check Point dialog flag after a minute
 ;-----------------------------------------------------
 ResetCheckPointTimer:
+   SetTimer, ResetCheckPointTimer, Off
    doCPECLogin = true
-Return
-
-ResetGmailMute:
-   doGmailMute = true
 Return
 
 ResetQCLoginTimer:
