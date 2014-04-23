@@ -25,6 +25,8 @@ execute pathogen#helptags()
 
 let g:vim_json_syntax_conceal=0
 
+au BufEnter flashlog.txt set syntax=flashlog
+
 " Flex property files. Setup the Align script
 au BufEnter *.properties let alignctrl=Align#AlignCtrl("l:")
 
@@ -228,11 +230,6 @@ au BufEnter *.src,vim* set comments=b:\" formatoptions=croq
 "-------------------------------------------------------------------------------
 so $BIN\doskey.vim
 
-"-------------------------------------------------------------------------------
-" My syntax
-"-------------------------------------------------------------------------------
-so $VIM/vimfiles/after/syntax/mysyntax.vim
-
 "===============================================================================
 " I'm testing these...
 "===============================================================================
@@ -260,3 +257,10 @@ cmap lw set columns=80<CR>
 au BufNewFile,BufRead *.mxml setfiletype=mxml
 au BufNewFile,BufRead *.as setfiletype=actionscript
 au BufNewFile,BufRead hangout*xml set filetype=google_gadgets
+
+"-------------------------------------------------------------------------------
+" My syntax
+"-------------------------------------------------------------------------------
+so $VIM/vimfiles/after/syntax/mysyntax.vim
+
+hi Comment guifg=DarkGreen ctermfg=DarkGreen
