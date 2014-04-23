@@ -38,9 +38,10 @@ EnterEGrid(debug=False)
       MsgBox, a=%a%, b=%b%, c=%c%
    }
    Else
+   {
+      WinActivate, Check Point Mobile
       SendInput, {TAB}%a%%b%%c%{ENTER}
+   }
 
    WinWaitClose
 }
-
-;EnterEGrid()
