@@ -1,4 +1,55 @@
+#SingleInstance, force
+
+;------------------------------------------------------------------
 ; These are utility functions that can be included in other scripts
+;------------------------------------------------------------------
+
+MakeCall(num)
+{
+   SetTitleMatchMode 2
+
+   ; Find the Gmail tab in Firefox
+   FindInAnyFirefoxTab("Gmail")
+
+   WinActivate, Gmail
+
+   ; Wait for the tab to be activated
+   Sleep, 500
+
+   ; click in the window to get focus
+   MouseClick, left, InputLocX, InputLocY, 2
+
+   ; Get the size of Firefox window
+   WinGetPos,,,,height
+
+   ; Subtract the height of the hangout dialer DIV to get to the input field for entering the number
+   InputLocY := height - 419
+   InputLocX := 380
+
+   ; try at most 5x's to get the hangouts dialer window up
+   Loop, 5
+   {
+      WinActivate, Gmail
+
+      SendInput, g
+      SendInput, p
+
+      PixelGetColor, color, InputLocX, InputLocY
+
+      ;OutputDebug, At x%InputLocX% and y%InputLocY% the color is %color%
+
+      If (color=0xFFFFFF)
+      {
+         ; Click into the phone number input box in Gmail dialer DIV
+         MouseClick, left, InputLocX, InputLocY, 2
+
+         SendInput, %num%{ENTER}
+
+         Break
+      }
+   }
+}
+
 Touch(f, d)
 {
    Run, touch %f%, %d%, Hide
