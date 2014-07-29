@@ -26,8 +26,10 @@ MakeCall(num)
    InputLocY := height - 419
    InputLocX := 380
 
+   success := false
+
    ; try at most 5x's to get the hangouts dialer window up
-   Loop, 5
+   Loop, 7
    {
       WinActivate, Gmail
 
@@ -36,18 +38,24 @@ MakeCall(num)
 
       PixelGetColor, color, InputLocX, InputLocY
 
-      ;OutputDebug, At x%InputLocX% and y%InputLocY% the color is %color%
+      OutputDebug, At x%InputLocX% and y%InputLocY% the color is %color%
 
       If (color=0xFFFFFF)
       {
          ; Click into the phone number input box in Gmail dialer DIV
          MouseClick, left, InputLocX, InputLocY, 2
 
+         Sleep, 500
+
          SendInput, %num%{ENTER}
+
+         success := true
 
          Break
       }
    }
+
+   Return success
 }
 
 Touch(f, d)

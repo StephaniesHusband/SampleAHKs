@@ -23,6 +23,7 @@ Return
 ;---------------
 goMP:
    Gui, Submit
+   StringReplace, MeetingNum, MeetingNum,%A_Space%,,All
    Run, call_part1.ahk %MeetingNum%
 Return
 
@@ -46,6 +47,7 @@ enterMP:
       ; input the meeting id
       Sleep, 1000
       SetKeyDelay, 500
+      StringReplace, MeetingNum, MeetingNum,%A_Space%,,All
       Send, %MeetingNum%{#}{#}
    }
 Return
