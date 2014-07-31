@@ -4,6 +4,8 @@
 #Include Utility.ahk
 #Include UserAndPwd.ahk
 
+Clipboard = %1%
+
 Gui, Add, Text, x12 y10 w50 h20 , MP#
 Gui, Add, Edit, x62 y7 w230 h20 vMeetingNum, %Clipboard%
 Gui, Add, Text, x12 y40 w50 h20 , Phone #:
@@ -22,7 +24,7 @@ Return
 ; Function: goMP
 ;---------------
 goMP:
-   Gui, Submit
+   Gui, Submit, NoHide
    StringReplace, MeetingNum, MeetingNum,%A_Space%,,All
    Run, call_part1.ahk %MeetingNum%
 Return
@@ -31,7 +33,7 @@ Return
 ; Function: callMP
 ;-----------------
 callMP:
-   Gui, Submit
+   Gui, Submit, NoHide
    MakeCall(9012636338)
 Return
 
@@ -39,7 +41,7 @@ Return
 ; Function: enterMP
 ;------------------
 enterMP:
-   Gui, Submit
+   Gui, Submit, NoHide
    WinActivate, Google+ Hangouts
 
    IfWinActive, Google+ Hangouts
@@ -56,7 +58,7 @@ Return
 ; Function: callPhone
 ;--------------------
 callPhone:
-   Gui, Submit
+   Gui, Submit, NoHide
    MakeCall(%PhoneNum%)
 Return
 
@@ -64,7 +66,7 @@ Return
 ; Function: goScreen
 ;-------------------
 goScreen:
-   Gui, Submit
+   Gui, Submit, NoHide
    StringReplace, MeetingNum, MeetingNum,%A_Space%,,All
    p := GetPassword()
    url := "http://meeting.web.fedex.com/mpweb/scripts/mpx.dll?id=" . MeetingNum . "&p=" . p
