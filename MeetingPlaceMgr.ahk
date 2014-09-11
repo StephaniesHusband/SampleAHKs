@@ -4,21 +4,28 @@
 #Include Utility.ahk
 #Include UserAndPwd.ahk
 
-Clipboard = %1%
+If %1%
+{
+   Clipboard = %1%
+}
 
 Gui, Add, Text, x12 y10 w50 h20 , MP#
 Gui, Add, Edit, x62 y7 w230 h20 vMeetingNum, %Clipboard%
 Gui, Add, Text, x12 y40 w50 h20 , Phone #:
 Gui, Add, Combobox, x62 y37 w230 h220 vPhoneNum gParsePhoneNum Choose1, 901-263-6338|Satish #901-752-2761|Seth #901-752-2721|Dan #901-626-4455|Chris #901-752-2801|Emil #608-213-7217|Rickman #901-752-2747|Varma #901-752-2758|MrWest #901-752-2727
-Gui, Add, Button, x12 y70 w280 h40 gGoMP Default, Call MP and enter MP# above
-Gui, Add, Button, x12 y110 w280 h40 gCallMP, Call MeetingPlace only
-Gui, Add, Button, x12 y150 w280 h40 gEnterMP, Enter MP# above
-Gui, Add, Button, x12 y190 w280 h40 gCallPhone, Call Phone Number above
-Gui, Add, Button, x12 y230 w280 h40 gGoScreen, Open MP Screenshare for MP# above
+Gui, Add, Button, x12 y70 w280 h40 gGoMP, Call MP and enter MP#
+Gui, Add, Button, Default x12 y110 w280 h40 gCallMP, Call MeetingPlace only
+Gui, Add, Button, x12 y150 w280 h40 gEnterMP, Enter MP#
+Gui, Add, Button, x12 y190 w280 h40 gCallPhone, Call Phone Number
+Gui, Add, Button, x12 y230 w280 h40 gGoScreen, Open MP Screenshare for MP#
+Gui, Add, Button, x12 y290 w280 h30 gExit, Exit
 
-Gui, Show, x127 y87 h283 w308, MeetingPlace Manager
+Gui, Show, x127 y87 h330 w308, MeetingPlace Manager
 
 Return
+
+exit:
+ExitApp
 
 ;---------------
 ; Function: goMP
