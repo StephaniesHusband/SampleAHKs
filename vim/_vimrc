@@ -8,6 +8,8 @@
 "**                     Macros & Miscellaneous Settings                       **
 "*******************************************************************************
 "*******************************************************************************
+set encoding=utf-8 fileencoding=utf-8 fileencodings=utf-8
+
 syntax on
 filetype plugin indent on
 
@@ -15,7 +17,9 @@ let mapleader=","
 
 let g:vim_markdown_initial_foldlevel=10
 
-au BufWinEnter *.htm silent loadview
+set splitright
+
+au BufWinEnter *.htm*,*.js[(on)]* silent loadview
 
 "-------------------------------------------------------------------------------
 " Pathogen settings
@@ -24,15 +28,26 @@ execute pathogen#infect()
 execute pathogen#helptags()
 
 let g:vim_json_syntax_conceal=0
+let g:mustache_abbreviations=1
+
+" open NERDTree when vim starts up with no file
+autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | norm l | endif
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+au FileType nerdtree hi CursorLine ctermbg=yellow ctermfg=black
+map <C-n> :NERDTreeToggle<CR>
+
+" close vim if only window left open is NERDTree
+autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 "----------------
 " NETRW
 "----------------
-let g:netrw_liststyle=3          " tree view
-let g:netrw_list_hide='.*\.swp$' " hide these files
-let g:netrw_altv=1               " right split (netrw appears on left)
-let g:netrw_winsize=85           " 85% width on new windows
-let g:netrw_browse_split=4       " open previous window
+"let g:netrw_liststyle=3          " tree view
+"let g:netrw_list_hide='.*\.sw.$,Sync.*\.dat' " hide these files
+"let g:netrw_altv=1               " right split (netrw appears on left)
+"let g:netrw_winsize=85           " 85% width on new windows
+"let g:netrw_browse_split=4       " open previous window
 
 au BufEnter flashlog.txt set syntax=flashlog
 
@@ -46,11 +61,16 @@ fun! AlignSkipString(lineno,indx)
    return ret
 endfun
 au BufEnter *.js let g:AlignSkip=function("AlignSkipString")
+" search for a function of the same name as word under cursor
+au BufEnter *.js nmap <F3> :call search(expand("<cword>").':\s*function')<CR>
 
 " This is for ProCease (AHK) artifacts files
-au BufEnter artifacts.txt set tabstop=15 formatoptions=croql cindent comments=n:;
+au BufEnter artifacts.txt set tabstop=15 formatoptions=croql cindent comments=n:; filetype=txt
 
 au BufEnter */itsalltext/*.txt set textwidth=0 wrap
+au BufEnter */sa/redesign/* set textwidth=0 path+=c:/sa/redesign
+au BufEnter *.js set textwidth=125
+au BufEnter *.md set textwidth=125
 
 " ??
 highlight Pmenu ctermbg=Gray guibg=Gray
@@ -66,7 +86,7 @@ highlight PmenuSel guibg=DarkBlue ctermbg=DarkBlue guifg=Yellow ctermfg=Yellow
 " Plugin Settings:
 "-------------------------------------------------------------------------------
 let Tlist_Ctags_Cmd="$BIN/ctags.exe"
-vnoremap <c-a> :Inc<CR> 
+"vnoremap <c-a> :Inc<CR> 
 
 "-------------------------------------------------------------------------------
 " FUNCTION KEYS:
@@ -82,6 +102,7 @@ noremap <F8> :bnext<CR>     " Next buffer
 "-------------------------------------------------------------------------------
 ru CQuickFileList.src
 au BufEnter,BufNewFile * nnoremap [f :sp $BIN/QuickFileList<CR>/SHIPNET/+2<CR>
+au BufEnter,BufNewFile svn-commit* nnoremap [f :call Artifacts()<CR>
 
 "-------------------------------------------------------------------------------
 " QUIT CURRENT BUFFER: [q
@@ -108,8 +129,7 @@ noremap ,f :call Format()<CR>
 "-------------------------------------------------------------------------------
 " LIST CURRENT FILE LIST AND PROMPT FOR JUMP: [l
 "-------------------------------------------------------------------------------
-noremap [l :ls<CR>:sp #
-noremap [L :ls<CR>:e #
+noremap [l :ls<CR>:b
 
 "-------------------------------------------------------------------------------
 " Replace the currently selected visual area with whatever you just yanked.
@@ -119,8 +139,8 @@ vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
 "-------------------------------------------------------------------------------
 " Scroll top and bottom windows simultaneously
 "-------------------------------------------------------------------------------
-nnoremap Œ– <C-E><C-W><C-W><C-E><C-W><C-W>  " Ctrl-Down
-nnoremap Œ≈ <C-Y><C-W><C-W><C-Y><C-W><C-W>  " Ctrl-Up
+"nnoremap ?? <C-E><C-W><C-W><C-E><C-W><C-W>  " Ctrl-Down
+"nnoremap ?? <C-Y><C-W><C-W><C-Y><C-W><C-W>  " Ctrl-Up
 
 "-------------------------------------------------------------------------------
 " Inserts blank line below/above current line and stays in on current line and
@@ -132,13 +152,14 @@ nmap OO O<ESC>j
 "-------------------------------------------------------------------------------
 " Alt+Cursor Up and Down - Goes to next/previous error
 "-------------------------------------------------------------------------------
-nmap Œ— :cn<CR>    " Alt+Down
-nmap Œ∆ :cp<CR>    " Alt+Up
+"nmap ?? :cn<CR>    " Alt+Down
+"nmap ?? :cp<CR>    " Alt+Up
 
 "===============================================================================
 "                                 VIM SETTINGS
 "===============================================================================
 version 4.0                   " Avoid warning for wrong version
+set number                    " Line numbers on all files
 set shellslash
 set clipboard=unnamed
 set suffixes+=.clw,.hm   " Put these suffixes at the end of completion code
@@ -166,16 +187,24 @@ set nosmartcase               " Override ignorecase if search pattern contains
 set autoindent                " Set autoindenting on
 set smartindent               " Do smart autoindenting
 set smarttab                  " Tab shiftwidth positions in front of lines
-set cmdheight=3               " Command line height
+set cmdheight=1               " Command line height
 set comments=fb:*,fb:-,b:\",b:#   " Set comment characteristics for any file
 set formatoptions=trq         " Set comment format options for any file
 set cpoptions=$BceFs          " Vim/Vi settings
 set isfname=@,48-57,/,:,.,-,_,+,,,$,\\,~   " omit quote and add \,~
-"set shellquote=\"             " Surround shell commands with quotes (for long
-"set grepprg=findstr\ /R\ /N\ /S " change grep program to search in subdirs file names)
-set grepprg=grep\ -n
+"set grepprg=findstr\ /R\ /N\ /S " change grep program to search in subdirs file names) 
+set grepprg=c:/cygwin/bin/grep\ -nHrs\ $*\ .\ 2>nul
 
-let &path=".," . substitute($INCLUDE, ";", ",", "g")
+fun! GrepIt(Needle, ...)
+   if bufname("%") == t:NERDTreeBufName
+      wincmd l
+   endif
+   let l:haystack = a:0 > 0 ? a:1 : '*.{js,mustache}'
+   execute "silent! grep --exclude=*.swp --exclude-dir=dist --exclude-dir=lib --exclude=production.js --include=" . l:haystack . " " . a:Needle
+   copen
+endfun
+command! -nargs=+ Grep call GrepIt(<f-args>)
+nnoremap gr :Grep <cword><CR>
 
 "-------------------------------------------------------------------------------
 " ERROR FORMAT STRINGS
@@ -195,7 +224,7 @@ let &path=".," . substitute($INCLUDE, ";", ",", "g")
 "-------------------------------------------------------------------------------
 au BufEnter * set formatoptions=tcql nocindent
 "au BufEnter jnk set formatoptions=croql comments=b:>
-"au BufEnter *.cpp,*.h,*.sql set formatoptions=croql cindent comments=b://,sr:/*,mnb:*,el:*/ cinoptions=>s,e0,n0,f0,{0,}0,^0,:s,=s,ps,ts,+s,(0,)0,*30
+au BufEnter *.js set formatoptions=croql cindent comments=b://,sr:/*,mnb:*,el:*/ cinoptions=>s,e0,n0,f0,{0,}0,^0,:s,=s,ps,ts,+s,(0,)0,*30
 "au BufEnter *.cpp,*.h,*.sql map [% :call Matching()<CR>
 "au BufEnter *.pl,*.cgi,*.cfg set formatoptions=croql cindent comments=b:#
 "au BufEnter *.x set formatoptions=croql cindent comments=b://
@@ -213,6 +242,21 @@ au BufEnter * set formatoptions=tcql nocindent
 "--------------------
 au BufEnter *.bat set comments=b:REM,b:rem formatoptions=croq
 au BufEnter *.bat set keywordprg=help
+
+" JMVC DocumentJS extended doc tags
+au Syntax javascript call MyJavascriptSyntax()
+function MyJavascriptSyntax()
+   syntax keyword jsCommentTodo contained TODO FUTURE SCOTT SERWIN ERWIN mah MAH
+   syntax match jsCommentTodo contained /NOTE\(:\d\+\)*/
+   syntax match jsDocTags "@parent\|@prototype\|@add\|@alias\|@body\|@demo\|@download\|@group\|@hide\|@iframe\|@inherits\|@option\|@page\|@parent\|@plugin\|@prototype\|@release\|@return\|@signature\|@test\|@typedef"
+endfun
+au BufEnter *.css syntax keyword cssCommentTodo contained TODO FUTURE SCOTT SERWIN ERWIN MAH mah
+
+au BufEnter cdrive.txt call MyCDriveSyntax()
+function MyCDriveSyntax()
+   syntax match myComment /(.*)$/
+   hi myComment guibg=DarkGreen ctermbg=DarkGreen ctermfg=white
+endfun
 
 "--------------------
 " Perl files
@@ -233,15 +277,6 @@ au BufEnter *.src,vim* set comments=b:\" formatoptions=croq
 "au BufLeave *.rc nunmap ]]
 
 "-------------------------------------------------------------------------------
-" Grep output window
-"-------------------------------------------------------------------------------
-"au BufEnter,BufNewFile *.grep,grep32.out set isfname-=:
-"au BufEnter,BufNewFile *.grep,grep32.out nnoremap <CR>  g0:call OnGrepCR(expand('<cfile>'))<CR>
-"au BufEnter,BufNewFile *.grep,grep32.out nnoremap <C-]>  g0:call OnGrepCR(expand('<cfile>'))<CR><C-W><C-P>j
-"au BufLeave *.grep,grep32.out nunmap <CR>
-"au BufLeave *.grep,grep32.out set isfname+=:
-
-"-------------------------------------------------------------------------------
 " Doskey abbreviations set up as command line abbreviations - use doskey.awk to
 " recreate.
 "-------------------------------------------------------------------------------
@@ -257,9 +292,9 @@ inoremap  <ESC>bdwa
 " Typo
 cmap e1 e!
 " Big window
-cmap bw set columns=150<CR>
+"cmap bw set columns=150<CR>
 " Little window
-cmap lw set columns=80<CR>
+"cmap lw set columns=80<CR>
 
 "function! HtmlFormat()
 "   norm mz
@@ -268,6 +303,19 @@ cmap lw set columns=80<CR>
 "   norm `z3k
 "   echo "Formatting Done!"
 "endf
+
+"au BufReadPost svn-commit*.tmp call Artifacts()
+function! Artifacts()
+   let artfs = readfile("c:/bin/artifacts.txt", "", 10)
+   let artf = inputlist(artfs)
+   if artf > 0
+      let vals = split(artfs[artf], '\t')
+      let str = vals[1] . " Scott - "
+      let rc = append(0, str)
+      normal gg
+      normal A
+   endif
+endf
 
 "command! -range=% -nargs=0 Space2Tab execute "<line1>,<line2>s/^\\( \\{".&ts."\\}\\)\\+/\\=substitute(submatch(0), ' \\{".&ts."\\}', '\\t', 'g')"
 
@@ -281,3 +329,40 @@ au BufNewFile,BufRead hangout*xml set filetype=google_gadgets
 so $VIM/vimfiles/after/syntax/mysyntax.vim
 
 hi Comment guifg=DarkGreen ctermfg=DarkGreen
+
+"let g:SuperTabDefaultCompletionType = 'context'
+"autocmd FileType *
+"   \ if &omnifunc != '' |
+"   \   call SuperTabChain(&omnifunc, "<c-p>") |
+"   \ endif
+
+command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
+function! s:RunShellCommand(cmdline)
+  echo a:cmdline
+  let expanded_cmdline = a:cmdline
+  for part in split(a:cmdline, ' ')
+     if part[0] =~ '\v[%#<]'
+        let expanded_part = fnameescape(expand(part))
+        let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
+     endif
+  endfor
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call setline(1, 'You entered:    ' . a:cmdline)
+  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
+  call setline(3,substitute(getline(2),'.','=','g'))
+  execute '$read !'. expanded_cmdline
+  setlocal nomodifiable
+  1
+endfunction
+
+command! -complete=file -nargs=* Git call s:RunShellCommand('git '.<q-args>)
+command! -complete=file -nargs=* Svn call s:RunShellCommand('svn '.<q-args>)
+
+let g:ctrlp_working_path_mode='a'
+let g:ctrlp_custom_ignore = {
+\ 'dir' : '\v[\/](node_modules|dist|\.(git|svn|tmp|settings|metadata)|packages|web|web-dev)$',
+\ 'file': '\v\.(exe|dll|sw[po]|bak|tgz|swp|tmp)'
+\}
+let g:ctrlp_mruf_exclude = "\v((.*\.(sw[po]|bak|tgz|swp|tmp))|.*\\QuickFileList|ctrlp.txt)"
+let g:ctrlp_cmd="CtrlPMRU"

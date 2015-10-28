@@ -3,7 +3,8 @@
 ;SetTitleMatchMode, 3 ; exact match
 
 Menu, Tray, Icon, ubernagkill.Ico
-GroupAdd, waitOnThese, (901) 263-6338 - chat - stephanieshusband@gmail.com
+;GroupAdd, waitOnThese, (901) 263-6338 - chat - stephanieshusband@gmail.com
+GroupAdd, waitOnThese, Clear Browser Cache ; Internet Explorer prompt
 GroupAdd, waitOnThese, Problem Occurred
 GroupAdd, waitOnThese, Trial Version
 GroupAdd, waitOnThese, Error with license
@@ -16,9 +17,8 @@ GroupAdd, waitOnThese, Microsoft Office Outlook Security Notice
 GroupAdd, waitOnThese, Microsoft Outlook Security Notice
 GroupAdd, waitOnThese, Java Security Warning
 GroupAdd, waitOnThese, Enterprise Password
-GroupAdd, waitOnThese, Login to Primavera Timesheets
-GroupAdd, waitOnThese, SSO Login - 
-GroupAdd, waitOnThese, loadzilla login - 
+;GroupAdd, waitOnThese, SSO Login - 
+;GroupAdd, waitOnThese, loadzilla login - 
 GroupAdd, waitOnThese, Information
 GroupAdd, waitOnThese, Login, Sym4a.Prod.fedex.com
 GroupAdd, waitOnThese, Check Point Mobile
@@ -27,7 +27,6 @@ GroupAdd, waitOnThese, Remove Activity
 GroupAdd, waitOnthese, Web Server Authentication
 GroupAdd, waitOnThese, Proxy Authentication
 GroupAdd, waitOnThese, WD SmartWare Drive Unlock 
-GroupAdd, waitOnThese, Authentication Required
 GroupAdd, waitOnThese, HP Application Lifecycle Management
 
 #Include c:\Bin
@@ -85,7 +84,7 @@ Loop
    ;---------------------------------------------------------------------------------------
    ; Needs "y" only
    ;---------------------------------------------------------------------------------------
-   if WinActive("Microsoft Office Outlook Security Notice") or WinActive("Microsoft Outlook Security Notice")
+   if WinActive("Clear Browser Cache") or WinActive("Microsoft Office Outlook Security Notice") or WinActive("Microsoft Outlook Security Notice")
    {
       Send, y
       WinWaitClose
@@ -94,29 +93,17 @@ Loop
    ;---------------------------------------------------------------------------------------
    ; Needs UserIdAndPassword only (no pauses)
    ;---------------------------------------------------------------------------------------
-   if WinActive("SSO Login")
-   {
-      MouseClick, left, 650, 300
-      If ClipWaitForText("Please do not bookmark this page", 8000) ; 8 seconds
-      {
-         ;SelectAll()
-         ;Send, {SHIFT DOWN}{TAB 4}{SHIFT UP}
-         Send, {TAB}
-         UserIdAndPassword()
-         WinWaitClose
-      }
-      Continue
-   }
-   if WinActive("Authentication Required")
-   {
-      SelectAll()
-      UserIdAndPassword()
-      WinWaitClose
-      Continue
-   }
-   ;---------------------------------------------------------------------------------------
-   ; Needs PasswordOnly only
-   ;---------------------------------------------------------------------------------------
+   ;if WinActive("SSO Login")
+  ;{
+  ;   MouseClick, left, 650, 300
+  ;   ;If ClipWaitForText("Please do not bookmark this page", 8000) ; 8 seconds
+  ;   {
+  ;      Send, {TAB}
+  ;      UserIdAndPassword()
+  ;      WinWaitClose
+  ;   }
+  ;   Continue
+  ;}
    IfWinActive, Login, Sym4a.Prod.fedex.com
    {
       PasswordOnly()
@@ -131,17 +118,6 @@ Loop
    IfWinActive, Trial Version
    {
       ControlClick,Button1,
-      Continue
-   }
-   IfWinActive, Login to Primavera Timesheets
-   {
-      Sleep, 1000
-      SendInput, +{TAB}
-      SelectAll()
-      UserIdOnly()
-      WinWaitActive
-      SelectAll()
-      PasswordOnly()
       Continue
    }
    IfWinActive, loadzilla login -
@@ -175,30 +151,6 @@ Loop
       Send, fedex{ENTER}
       Continue
    }
-;   IfWinActive, HP Application Lifecycle Management
-;   {
-;      If doQC = true 
-;      {
-;         Clipboard=
-;
-;         Loop
-;         {
-;            Sleep, 500
-;            SelectAll()
-;         } Until (GetClipboard() == "263952" or doQC = false)
-;
-;         If doQC = true
-;         {
-;            doQC = false
-;
-;            Send, {TAB}
-;            SelectAll()
-;            PasswordOnly()
-;         }
-;      }
-;
-;      Continue
-;   }
 }
 
 ;-----------------------------------------------------

@@ -12,6 +12,7 @@ BlockInput, SendAndMouse
 Menu, tray, Add,
 Menu, tray, Add, Toggle Mute, _ToggleMute
 Menu, tray, Add, Hide, _HideMuteIndicator
+Menu, tray, Add, Toggle Indicator Size, _ToggleIndicatorSize
 
 ; Global vars
 CustomColor = 000000 
@@ -19,6 +20,9 @@ MuteColor=0x3744db ; reddish
 MicLocX = 976  ; 976 without HangoutHelper, XX with HangoutHelper
 MicLocY = 786  ; 786 without HangoutHelper, YY with HangoutHelper
 WinTitle = Google+ Hangouts - Mozilla Firefox
+SmallFont = 150
+LargeFont = 650
+FontSize = %SmallFont%
 
 DisplayMuteIndicator()
 
@@ -50,9 +54,10 @@ CreateMuteIndicator()
    }
 
    ; create new window
+   Gui +hwndHwnd
    Gui +LastFound +AlwaysOnTop -Caption +ToolWindow
    Gui, Color, %CustomColor%
-   Gui, Font, s150, WebDings
+   Gui, Font, s%FontSize%, WebDings
    WinMove,,,,,248,80
 
    ; Make window transparent
@@ -173,6 +178,23 @@ ToggleMute()
 }
 
 ;-----------------------------------------------------------------------------------------------------------------------------
+; Function: ToggleIndicatorSize
+;-----------------------------------------------------------------------------------------------------------------------------
+ToggleIndicatorSize()
+{
+   Global
+
+   If FontSize = %SmallFont%
+      FontSize = %LargeFont%
+   Else
+      FontSize = %SmallFont%
+
+   Gui, Font, s%FontSize%
+   GuiControl Font, Hwnd
+   Gui, Show
+}
+
+;-----------------------------------------------------------------------------------------------------------------------------
 ; These are needed only for the context menu. It needs labels, not functions.
 ;-----------------------------------------------------------------------------------------------------------------------------
 _ToggleMute:
@@ -181,4 +203,8 @@ Return
 
 _HideMuteIndicator:
    HideMuteIndicator()
+Return
+
+_ToggleIndicatorSize:
+   ToggleIndicatorSize()
 Return
