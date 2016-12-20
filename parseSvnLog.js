@@ -107,7 +107,16 @@ fs.readFile(process.argv[3], function(err, data) {
             // CodeReview()".  That command knows to look on the clipboard for
             // somethingn in the appropriate format.
             case 3: 
-               return commits.map(function(a) {
+               return commits.filter(function(a) {
+                  try {
+                     // Only return the commits that are files
+                     var stats = fs.statSync(a.path.substr(a.path.indexOf("/", 11)+1));
+                     return stats.isFile();
+                  }
+                  catch(err) {
+                     return false;
+                  }
+               }).map(function(a) {
                   return {
                      "filename": a.path.substr(a.path.indexOf("/", 11)+1),
                      "lnum" : "1",
