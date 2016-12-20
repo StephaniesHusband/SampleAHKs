@@ -12,7 +12,7 @@ SetTitleMatchMode, RegEx
 Menu, Tray, Icon, outlookvimctrls.ico
 
 
-#IfWinActive, ^((?!Calendar).)*Microsoft Outlook
+#IfWinActive, ^((?!Calendar).)*Outlook
 #!s::Suspend   ; Assign the toggle-suspend function to a hotkey.
 :*:j::{DOWN}   ; move down
 :*:k::{UP}     ; move up
@@ -27,9 +27,9 @@ Menu, Tray, Icon, outlookvimctrls.ico
 :*:a::^+r      ; Reply All
 m::            ; Toggle read/unread
 if toggle := !toggle
-   Send, ^q
-else
    Send, ^u
+else
+   Send, ^q
 return
 +t::           ; permanently delete
    SendInput, +{DELETE}
@@ -58,20 +58,16 @@ return
 ; Ctrl-Shift-f on Outlook appointment sends to gCal
 ;---------------------------------------------------------------------------------------------------
 #IfWinActive, ahk_class rctrl_renwnd32
-^+f::
-SendInput, ^f
-WinWaitActive, FW:
-Sleep, 500
-MouseClick, left, 133, 205
-SendInput, {DELETE 4}
-Sleep, 250
-SendInput, +{TAB}
-Sleep, 250
-;SendInput, stephanieshusband@gmail.com{TAB 2}
-SendInput, skotterwin@gmail.com{TAB 2}
-Sleep, 500
-SendInput, +^{DOWN 5}
-SendInput, {DELETE}
-SendInput, ^{ENTER}
-return
+   ^+f::
+      SendInput, ^f
+      WinWaitActive, FW:
+      Sleep, 250
+      SendInput, skotterwin@gmail.com
+      MouseClick, left, 133, 220 ; in the subject
+      SendInput, {DELETE 4} ; delete FW:
+      SendInput, {TAB 2}
+      SendInput, +^{DOWN 5}
+      SendInput, {DELETE}
+      SendInput, ^{ENTER}
+      Return
 #IfWinActive

@@ -4,8 +4,8 @@ Menu, Tray, Icon, KeepAliver.ico
 
 ;--- SETTINGS -----------------------------------------------------------------
 distance_x_px := 1
-check_interval_secs := 60
-minimum_idle_secs := 720 ; 12 min
+check_interval_secs := 60*60*10 ; 9 min
+minimum_idle_secs := 60*60*5 ; 5 min
 
 ;--- MAIN LOOP ----------------------------------------------------------------
 ; If the user has been idle for a certain time this script moves

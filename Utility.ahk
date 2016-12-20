@@ -72,6 +72,12 @@ GetClipboard()
    Return cb 
 }
 
+ReadClipboard()
+{
+   cb := Trim(Clipboard)
+   Return cb 
+}
+
 SelectAll()
 {
    SendInput, ^a

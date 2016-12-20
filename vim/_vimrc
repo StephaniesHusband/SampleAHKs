@@ -10,12 +10,15 @@
 "*******************************************************************************
 set encoding=utf-8 fileencoding=utf-8 fileencodings=utf-8
 
-syntax on
 filetype plugin indent on
+syntax on
 
 let mapleader=","
 
-let g:vim_markdown_initial_foldlevel=10
+"let g:vim_markdown_folding_level=2
+"let g:vim_markdown_new_list_item_indent=0
+let g:vim_markdown_folding_style_pythonic=1
+let NERDTreeIgnore=['apple.*png', 'favicon*']
 
 set splitright
 
@@ -29,6 +32,10 @@ execute pathogen#helptags()
 
 let g:vim_json_syntax_conceal=0
 let g:mustache_abbreviations=1
+
+let g:NERDTreeShowGitStatus=0
+let g:NERDTreeShowSvnStatus=1
+let g:NERDTreeUpdateOnWrite=0
 
 " open NERDTree when vim starts up with no file
 autocmd StdinReadPre * let s:std_in=1
@@ -52,7 +59,9 @@ autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 au BufEnter flashlog.txt set syntax=flashlog
 
 " Flex property files. Setup the Align script
-au BufEnter *.properties let AlignCtrl=Align#AlignCtrl("l:")
+au BufEnter *.properties,*.json let AlignCtrl=Align#AlignCtrl("l:")
+
+au BufEnter file.*.json setlocal filetype=csv
 
 fun! AlignSkipString(lineno,indx)
    let synId   = synID(a:lineno,a:indx+1,1)
@@ -65,12 +74,11 @@ au BufEnter *.js let g:AlignSkip=function("AlignSkipString")
 au BufEnter *.js nmap <F3> :call search(expand("<cword>").':\s*function')<CR>
 
 " This is for ProCease (AHK) artifacts files
-au BufEnter artifacts.txt set tabstop=15 formatoptions=croql cindent comments=n:; filetype=txt
+au BufEnter artifacts.txt set formatoptions=croql cindent comments=n:; filetype=txt tabstop=4
 
 au BufEnter */itsalltext/*.txt set textwidth=0 wrap
-au BufEnter */sa/redesign/* set textwidth=0 path+=c:/sa/redesign
-au BufEnter *.js set textwidth=125
-au BufEnter *.md set textwidth=125
+au BufEnter */sa/redesign/* set textwidth=125 path+=c:/sa/redesign
+au BufEnter *.md set textwidth=125 formatoptions-=c
 
 " ??
 highlight Pmenu ctermbg=Gray guibg=Gray
@@ -85,7 +93,7 @@ highlight PmenuSel guibg=DarkBlue ctermbg=DarkBlue guifg=Yellow ctermfg=Yellow
 "-------------------------------------------------------------------------------
 " Plugin Settings:
 "-------------------------------------------------------------------------------
-let Tlist_Ctags_Cmd="$BIN/ctags.exe"
+"let Tlist_Ctags_Cmd="$BIN/ctags.exe"
 "vnoremap <c-a> :Inc<CR> 
 
 "-------------------------------------------------------------------------------
@@ -101,7 +109,7 @@ noremap <F8> :bnext<CR>     " Next buffer
 " Show file list of commonly used files from quick list file
 "-------------------------------------------------------------------------------
 ru CQuickFileList.src
-au BufEnter,BufNewFile * nnoremap [f :sp $BIN/QuickFileList<CR>/SHIPNET/+2<CR>
+au BufEnter,BufNewFile * nnoremap [f :sp $BIN/QuickFileList<CR>/USEFUL/+2<CR>
 au BufEnter,BufNewFile svn-commit* nnoremap [f :call Artifacts()<CR>
 
 "-------------------------------------------------------------------------------
@@ -129,7 +137,9 @@ noremap ,f :call Format()<CR>
 "-------------------------------------------------------------------------------
 " LIST CURRENT FILE LIST AND PROMPT FOR JUMP: [l
 "-------------------------------------------------------------------------------
-noremap [l :ls<CR>:b
+"noremap [l :ls<CR>:b
+"noremap [L :ls<CR>:sb
+noremap [l :CtrlPBuffer<CR>
 
 "-------------------------------------------------------------------------------
 " Replace the currently selected visual area with whatever you just yanked.
@@ -193,18 +203,74 @@ set formatoptions=trq         " Set comment format options for any file
 set cpoptions=$BceFs          " Vim/Vi settings
 set isfname=@,48-57,/,:,.,-,_,+,,,$,\\,~   " omit quote and add \,~
 "set grepprg=findstr\ /R\ /N\ /S " change grep program to search in subdirs file names) 
-set grepprg=c:/cygwin/bin/grep\ -nHrs\ $*\ .\ 2>nul
+set grepprg=c:/cygwin64/bin/grep\ -nHRs\ $*\ .\ 2>nul
 
 fun! GrepIt(Needle, ...)
+   " If we are in the NERDTree, don't replace it with Grep results, switch to
+   " next window first.
    if bufname("%") == t:NERDTreeBufName
       wincmd l
    endif
-   let l:haystack = a:0 > 0 ? a:1 : '*.{js,mustache}'
-   execute "silent! grep --exclude=*.swp --exclude-dir=dist --exclude-dir=lib --exclude=production.js --include=" . l:haystack . " " . a:Needle
+
+   " Default look in js, mustache & json files
+   let l:haystack = a:0 > 0 ? a:1 : '*.{js,mustache,json}'
+
+   " If an include/file pattern is given, then we can't specify an exclude, else default exclude.
+   let l:exclude = a:0 > 0 ? '' : ' --exclude={*.swp,*production.js*,style.css}'
+
+   execute "silent! grep " . a:Needle . l:exclude . " --exclude-dir={dist,lib,.svn,qaTest} --include=" . l:haystack
    copen
 endfun
 command! -nargs=+ Grep call GrepIt(<f-args>)
-nnoremap gr :Grep <cword><CR>
+nnoremap gr :let @/=expand("<cword>")<CR>:Grep <cword><CR>
+
+" Assumes that there's a list on the clipboard to parse!! Run getCommits.cmd to
+" obtain and then copy from the outputted JSON.
+fun! CodeReview(...) 
+   " If we are in the NERDTree, don't replace it with Grep results, switch to
+   " next window first.
+   if bufname("%") == t:NERDTreeBufName
+      wincmd l
+   endif
+
+   try
+      if a:0 == 0
+         let l:commits = substitute(strtrans(@*),'\^@\s\+','','g')
+         silent execute "let l:commitList = " . l:commits
+      else
+         let l:commitList = a:1
+      endif
+
+      if len(l:commitList) > 0
+         if has_key(l:commitList[0], "filename")
+            call setqflist(l:commitList)
+            copen
+            cc 1
+         endif
+      endif
+   catch
+      echo "Clipboard contents are not in list format!"
+   endtry
+endfun
+
+function! CodeReviewMenu()
+   execute "let l:artifactList = " . readfile("/temp/commits.json")[0]
+
+   let l:choices = []
+
+   let l:ndx = 1
+   for artf in artifactList
+      call add(l:choices, l:ndx . artf.story)
+      let l:ndx = l:ndx + 1
+   endfor
+
+   let l:choiceString = join(l:choices, "\n") 
+   let l:chosen = confirm("Choose the Story to review:", l:choiceString)
+   "let l:storyNdx = l:choices[l:chosen-1]
+
+   call CodeReview(l:artifactList[l:chosen-1].paths)
+endfun
+
 
 "-------------------------------------------------------------------------------
 " ERROR FORMAT STRINGS
@@ -216,26 +282,8 @@ nnoremap gr :Grep <cword><CR>
 "                                AUTO COMMANDS
 "===============================================================================
 
-"-------------------------------------------------------------------------------
-" C Files
-"   For *.c and *.h files set formatting of comments and set C-indenting on
-"   For other files switch it off
-"   Don't change the sequence, it's important that the line with * comes first.
-"-------------------------------------------------------------------------------
-au BufEnter * set formatoptions=tcql nocindent
-"au BufEnter jnk set formatoptions=croql comments=b:>
 au BufEnter *.js set formatoptions=croql cindent comments=b://,sr:/*,mnb:*,el:*/ cinoptions=>s,e0,n0,f0,{0,}0,^0,:s,=s,ps,ts,+s,(0,)0,*30
-"au BufEnter *.cpp,*.h,*.sql map [% :call Matching()<CR>
-"au BufEnter *.pl,*.cgi,*.cfg set formatoptions=croql cindent comments=b:#
-"au BufEnter *.x set formatoptions=croql cindent comments=b://
-
-"--------------------
-" Resource files
-"--------------------
-"au BufEnter *.rc set sw=4 ts=4
-"au BufLeave *.rc set sw=3 ts=3
-
-"set makeef=jnk.nmake##
+au BufEnter *.mustache,*.css,*.scss set iskeyword+=- 
 
 "--------------------
 " Batch files
@@ -243,20 +291,20 @@ au BufEnter *.js set formatoptions=croql cindent comments=b://,sr:/*,mnb:*,el:*/
 au BufEnter *.bat set comments=b:REM,b:rem formatoptions=croq
 au BufEnter *.bat set keywordprg=help
 
-" JMVC DocumentJS extended doc tags
-au Syntax javascript call MyJavascriptSyntax()
-function MyJavascriptSyntax()
-   syntax keyword jsCommentTodo contained TODO FUTURE SCOTT SERWIN ERWIN mah MAH
-   syntax match jsCommentTodo contained /NOTE\(:\d\+\)*/
-   syntax match jsDocTags "@parent\|@prototype\|@add\|@alias\|@body\|@demo\|@download\|@group\|@hide\|@iframe\|@inherits\|@option\|@page\|@parent\|@plugin\|@prototype\|@release\|@return\|@signature\|@test\|@typedef"
+au Syntax javascript,css,scss call MyDocumentJsTags()
+function! MyDocumentJsTags()
+   syntax match jsDocTags containedin=.*Comment "@\(add\|alias\|body\|demo\|download\|group\|hide\|iframe\|inherits\|option\|page\|parent\|plugin\|prototype\|release\|return\|signature\|test\|typedef\|baseclass\)\>" skipwhite
+	syntax match jsDocTags containedin=.*Comment "@\(abstract\|access\|alias\|arg\|argument\|augments\|author\|borrows\|callback\|class\|classdesc\|const\|constant\|constructor\|constructs\|copyright\|default\|defaultvalue\|deprecated\|desc\|description\|emits\|enum\|event\|example\|exception\|exports\|extends\|external\|file\|fileoverview\|fires\|func\|function\|global\|host\|ignore\|implements\|inheritdoc\|inner\|instance\|interface\|kind\|lends\|license\|link\|linkcode\|linkplain\|listens\|member\|memberof\|method\|mixes\|mixin\|module\|name\|namespace\|override\|overview\|param\|private\|prop\|property\|cfg\|protected\|public\|readonly\|requires\|return\|returns\|see\|since\|static\|summary\|this\|throws\|todo\|tutorial\|tutorial\|type\|typedef\|var\|variation\|version\|virtual\)\>" skipwhite
+   "syntax region cssComment start=+/\*+ end=+\*/+ fold contains=@Spell,jsDocTags
+   hi link jsDocTags Special
 endfun
-au BufEnter *.css syntax keyword cssCommentTodo contained TODO FUTURE SCOTT SERWIN ERWIN MAH mah
 
-au BufEnter cdrive.txt call MyCDriveSyntax()
-function MyCDriveSyntax()
-   syntax match myComment /(.*)$/
-   hi myComment guibg=DarkGreen ctermbg=DarkGreen ctermfg=white
-endfun
+augroup vimrc_todo
+   au!
+   au Syntax * syn match MyTodo contained /\v<(NOTE|TODO|FUTURE|SCOTT|SERWIN|ERWIN|mah|MAH)/
+         \ containedin=.*Comment.*
+augroup END
+hi def link MyTodo Todo
 
 "--------------------
 " Perl files
@@ -304,14 +352,30 @@ cmap e1 e!
 "   echo "Formatting Done!"
 "endf
 
-"au BufReadPost svn-commit*.tmp call Artifacts()
+"-------------------------------------------------------------------------------
+" Function: Artifacts
+" Description: Present the user with a list of possible artifacts to commit with
+" for SVN. This is a Teamforge requirement.
+"
+" artifacts.txt is in format:
+"     #.<TAB>[artfNNNNNNN]<TAB>Story# - StoryDescription
+"-------------------------------------------------------------------------------
 function! Artifacts()
    let artfs = readfile("c:/bin/artifacts.txt", "", 10)
    let artf = inputlist(artfs)
    if artf > 0
+      " Split out the values for the line chosen into an array
       let vals = split(artfs[artf], '\t')
-      let str = vals[1] . " Scott - "
+      let story = split(vals[2], " - ")
+
+      " Split out and include the story/backlog # in the commit comment
+      let storyNum = len(story) > 1 ? " (" . story[0] . ")" : ""
+      let str = vals[1] . " Scott" . storyNum . ": "
+
+      " Append (prepend) the commit string to the svn commit file
       let rc = append(0, str)
+
+      " Move to the top of the file and put in Append mode
       normal gg
       normal A
    endif
@@ -347,17 +411,27 @@ function! s:RunShellCommand(cmdline)
      endif
   endfor
   botright new
+  " turns the buffer into a "scratch" buffer
   setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
   call setline(1, 'You entered:    ' . a:cmdline)
   call setline(2, 'Expanded Form:  ' .expanded_cmdline)
   call setline(3,substitute(getline(2),'.','=','g'))
   execute '$read !'. expanded_cmdline
   setlocal nomodifiable
-  1
+endfunction
+
+function! s:SvnIt(cmd, ...) 
+   call s:RunShellCommand('svn '.a:cmd.' '.join(a:000))
+
+   if a:cmd == "log"
+      setlocal filetype=svnlog
+      norm gg
+   endif
 endfunction
 
 command! -complete=file -nargs=* Git call s:RunShellCommand('git '.<q-args>)
-command! -complete=file -nargs=* Svn call s:RunShellCommand('svn '.<q-args>)
+command! -complete=file -nargs=* Svn call s:SvnIt(<f-args>)
+map <Leader>nf :NERDTreeFind<CR>
 
 let g:ctrlp_working_path_mode='a'
 let g:ctrlp_custom_ignore = {
@@ -366,3 +440,16 @@ let g:ctrlp_custom_ignore = {
 \}
 let g:ctrlp_mruf_exclude = "\v((.*\.(sw[po]|bak|tgz|swp|tmp))|.*\\QuickFileList|ctrlp.txt)"
 let g:ctrlp_cmd="CtrlPMRU"
+
+function! Incr()
+  let a = line('.') - line("'<")
+  let c = virtcol("'<")
+  if a > 0
+    execute 'normal! '.c.'|'.a."\<C-a>"
+  endif
+  normal `<
+endfunction
+vnoremap <C-a> :call Incr()<CR>
+
+inoremap <C-Space> <C-x><C-o>
+inoremap <C-@> <C-Space>
