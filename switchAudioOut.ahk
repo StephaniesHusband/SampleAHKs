@@ -9,14 +9,15 @@ Run, mmsys.cpl
 WinWait, Sound
 
 If (OUT = "USB") {
-   ControlSend, SysListView321,{Down 1} ; USB headphones
+   ControlSend, SysListView321,{Down 3} ; USB headphones
 }
 Else If (OUT = "PC") {
-   ControlSend, SysListView321,{Down 2} ; Laptop/PC
+   ControlSend, SysListView321,{Down 4} ; Laptop/PC
 }
 Else {
-   ControlSend, SysListView321, {Down 3} ; Speakers (Normal)
+   ControlSend, SysListView321, {Down 5} ; Speakers (Normal)
 }
 
-ControlClick, &Set Default
+Send, !s
+
 ControlClick, OK 

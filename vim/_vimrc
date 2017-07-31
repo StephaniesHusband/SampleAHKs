@@ -8,24 +8,134 @@
 "**                     Macros & Miscellaneous Settings                       **
 "*******************************************************************************
 "*******************************************************************************
-set encoding=utf-8 fileencoding=utf-8 fileencodings=utf-8
 
+"===============================================================================
+" VIM Settings:
+"===============================================================================
 filetype plugin indent on
 syntax on
+version 4.0                       " Avoid warning for wrong version
 
 let mapleader=","
 
+set encoding=utf-8 fileencoding=utf-8 fileencodings=utf-8
+set splitright
+set number                        " Line numbers on all files
+set shellslash
+set clipboard=unnamed
+set suffixes+=.clw,.hm            " Put these suffixes at the end of completion code
+set wildignore+=*.aps,.*~,*.txe,*.plg,*.opt
+set nowrap
+set winheight=5                   " minimal window height
+set complete=.,w,b,u,U,i,t        
+set hlsearch                      " Highlight search string
+set tabstop=3                     " Set tabstops every 3 characters
+set shiftwidth=3                  " Set shift width to 3 characters
+set shiftround                    " Rounds > & < to nearest shift width
+set autowrite                     " Write file every time ESC is pressed
+set tag+=../tags                  
+set notagrelative                 " use exact path specified in tag file (not rel.)
+set backspace=2                   " Allow backspacing over everything in insert mode
+set textwidth=125                 " Set width of text
+set viminfo='20,\"50              " read/write a .viminfo file, don't store more than 50 lines of registers
+set visualbell                    " Stop that infernal racket!
+set expandtab                     " Expand the tabs to spaces
+set ruler                         " Display the column and line numbers
+set ignorecase                    " Ignore case when searching
+set nosmartcase                   " Override ignorecase if search pattern contains upper case letters
+set autoindent                    " Set autoindenting on
+set smartindent                   " Do smart autoindenting
+set smarttab                      " Tab shiftwidth positions in front of lines
+set cmdheight=1                   " Command line height
+set comments=fb:*,fb:-,b:\",b:#   " Set comment characteristics for any file
+set formatoptions=trq             " Set comment format options for any file
+set cpoptions=$BceFs              " Vim/Vi settings
+set isfname=@,48-57,/,:,.,-,_,+,,,$,\\,~   " omit quote and add \,~
+set grepprg=c:/cygwin64/bin/grep\ -nHRs\ $*\ .\ 2>nul
+set listchars=eol:$,tab:→·,trail:▓
+
+"===============================================================================
+" PLUGINS, MACROS, LIBRARIES, SYNTAX, etc.
+"===============================================================================
+
+"-------------------------------------------------------------------------------
+" Library: Doskey abbreviations set up as command line abbreviations - use
+" doskey.awk to recreate.
+"-------------------------------------------------------------------------------
+so $BIN\doskey.vim
+
+"-------------------------------------------------------------------------------
+" Syntax: MINE
+"-------------------------------------------------------------------------------
+so $VIM/vimfiles/after/syntax/mysyntax.vim
+
+hi Comment guifg=DarkGreen ctermfg=DarkGreen
+
+augroup vimrc_todo
+   au!
+   au Syntax * syn match MyTodo contained /\v<(NOTE|TODO|FUTURE|SCOTT|SERWIN|ERWIN|FIXME|mah|MAH)/
+         \ containedin=.*Comment.*
+augroup END
+
+hi def link MyTodo Todo
+
+"-------------------------------------------------------------------------------
+" Plugin: Multiple Cursors (aka Sublime Multi-select)
+"-------------------------------------------------------------------------------
+nnoremap <silent> <M-j> :MultipleCursorsFind <C-R>/<CR>
+vnoremap <silent> <M-j> :MultipleCursorsFind <C-R>/<CR>
+let g:multi_cursor_next_key='<M-n>'
+
+"--------------------------------------------------------------------------------
+" Plugin: markdown
+"--------------------------------------------------------------------------------
 "let g:vim_markdown_folding_level=2
 "let g:vim_markdown_new_list_item_indent=0
 let g:vim_markdown_folding_style_pythonic=1
-let NERDTreeIgnore=['apple.*png', 'favicon*']
 
-set splitright
+"--------------------------------------------------------------------------------
+" Plugin: syntastic
+" Description: Syntax checking plugin. I use it with Javascript linter 'ESLint'
+"--------------------------------------------------------------------------------
+" Misc settings
+au BufEnter */sa/redesign/* call SenseAwareSyntastic()
+function SenseAwareSyntastic()
+   " Statusline
+   set statusline=[%n]\ %t\ %m
+   set statusline+=%#warningmsg#
+   set statusline+=%{SyntasticStatuslineFlag()}
+   set statusline+=%*
+   set statusline+=%=%l:%c
 
-au BufWinEnter *.htm*,*.js[(on)]* silent loadview
+   let g:syntastic_always_populate_loc_list = 1
+   let g:syntastic_loc_list_height = 5
+   let g:syntastic_auto_loc_list = 1
+   let g:syntastic_check_on_open = 1
+   let g:syntastic_check_on_wq = 1
+   let g:syntastic_aggregate_errors = 1
+
+   " Checkers per filetype
+   let g:syntastic_javascript_checkers = ['eslint']
+   let g:syntastic_sass_checkers = ['sasslint']
+   let g:syntastic_scss_checkers = ['sasslint']
+
+   let g:syntastic_mode_map = {
+      \ "mode": "active",
+      \ "active_filetypes": ["javascript"],
+      \ "passive_filetypes": ["sass", "scss"] }
+
+   " Left margin symbols
+   let g:syntastic_error_symbol = '×'
+   let g:syntastic_warning_symbol = '√'
+
+   " Colors
+   hi SyntasticWarning guibg=Magenta guifg=Black ctermbg=Magenta ctermfg=Black
+   hi SyntasticError guibg=Red guifg=White ctermbg=Red ctermfg=White
+endfun
 
 "-------------------------------------------------------------------------------
-" Pathogen settings
+" Plugin: pathogen
+" Description: Poor man's module loader
 "-------------------------------------------------------------------------------
 execute pathogen#infect()
 execute pathogen#helptags()
@@ -33,13 +143,17 @@ execute pathogen#helptags()
 let g:vim_json_syntax_conceal=0
 let g:mustache_abbreviations=1
 
+"-------------------------------------------------------------------------------
+" Plugin: nerdtree and nerdtree plugins
+"-------------------------------------------------------------------------------
+let NERDTreeIgnore=['apple.*png','favicon*','node_modules','jmvc','static']
 let g:NERDTreeShowGitStatus=0
 let g:NERDTreeShowSvnStatus=1
 let g:NERDTreeUpdateOnWrite=0
+let g:NERDTreeMinimalUI=1
 
 " open NERDTree when vim starts up with no file
 autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | norm l | endif
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 au FileType nerdtree hi CursorLine ctermbg=yellow ctermfg=black
 map <C-n> :NERDTreeToggle<CR>
@@ -47,195 +161,194 @@ map <C-n> :NERDTreeToggle<CR>
 " close vim if only window left open is NERDTree
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
-"----------------
-" NETRW
-"----------------
-"let g:netrw_liststyle=3          " tree view
-"let g:netrw_list_hide='.*\.sw.$,Sync.*\.dat' " hide these files
-"let g:netrw_altv=1               " right split (netrw appears on left)
-"let g:netrw_winsize=85           " 85% width on new windows
-"let g:netrw_browse_split=4       " open previous window
+map <Leader>nf :NERDTreeFind<CR>
 
-au BufEnter flashlog.txt set syntax=flashlog
+"-------------------------------------------------------------------------------
+" Plugin: vim-javascript
+"-------------------------------------------------------------------------------
+" nothing
 
-" Flex property files. Setup the Align script
+"-------------------------------------------------------------------------------
+" Plugin: align
+"-------------------------------------------------------------------------------
 au BufEnter *.properties,*.json let AlignCtrl=Align#AlignCtrl("l:")
 
-au BufEnter file.*.json setlocal filetype=csv
-
-fun! AlignSkipString(lineno,indx)
-   let synId   = synID(a:lineno,a:indx+1,1)
+fun! AlignSkipString(lineNum, ndx)
+   let synId   = synID(a:lineNum,a:ndx+1,1)
    let synName = synIDattr(synId,"name")
    let ret = (synName == "javaScriptString") ? 1 : 0
    return ret
 endfun
 au BufEnter *.js let g:AlignSkip=function("AlignSkipString")
-" search for a function of the same name as word under cursor
+
+" Search for a function of the same name as word under cursor
 au BufEnter *.js nmap <F3> :call search(expand("<cword>").':\s*function')<CR>
 
-" This is for ProCease (AHK) artifacts files
+"-------------------------------------------------------------------------------
+" Macro: Procease AutoHotkey and Doskey Macros
+"-------------------------------------------------------------------------------
 au BufEnter artifacts.txt set formatoptions=croql cindent comments=n:; filetype=txt tabstop=4
-
-au BufEnter */itsalltext/*.txt set textwidth=0 wrap
-au BufEnter */sa/redesign/* set textwidth=125 path+=c:/sa/redesign
-au BufEnter *.md set textwidth=125 formatoptions-=c
-
-" ??
-highlight Pmenu ctermbg=Gray guibg=Gray
-highlight PmenuSel guibg=DarkBlue ctermbg=DarkBlue guifg=Yellow ctermfg=Yellow
+au BufEnter doskey.mac setf doskey
 
 "-------------------------------------------------------------------------------
-" Auto Correct Common Misspellings:
+" Description: WSAW (SenseAware) Project-specific settings
 "-------------------------------------------------------------------------------
-:cab wq1 wq!
-:cab q1 q!
+" Handle WSAW Fixture files that are supposed to look like downloaded CSV's by setting the filetype.
+au BufEnter file.*.json setlocal filetype=csv
+
+au BufEnter */sa/redesign/* set path+=c:/sa/redesign
+au BufEnter *.md set formatoptions-=c
+
+map <Leader>cr :call CodeReviewMenu()<CR>
 
 "-------------------------------------------------------------------------------
-" Plugin Settings:
-"-------------------------------------------------------------------------------
-"let Tlist_Ctags_Cmd="$BIN/ctags.exe"
-"vnoremap <c-a> :Inc<CR> 
-
-"-------------------------------------------------------------------------------
-" FUNCTION KEYS:
-"-------------------------------------------------------------------------------
-noremap <F4> :echo synIDattr(synID(line("."), col("."), 1), "name")<CR>
-noremap <F5> :call ToggleOption('hlsearch')<CR>
-noremap <F7> :bNext<CR>     " Previous buffer
-noremap <F8> :bnext<CR>     " Next buffer
-
-"-------------------------------------------------------------------------------
-" QUICK FILE LIST:
-" Show file list of commonly used files from quick list file
+" Macro Library: QuickFileList
+" Description: Show file list of commonly used files from quick list file
 "-------------------------------------------------------------------------------
 ru CQuickFileList.src
 au BufEnter,BufNewFile * nnoremap [f :sp $BIN/QuickFileList<CR>/USEFUL/+2<CR>
 au BufEnter,BufNewFile svn-commit* nnoremap [f :call Artifacts()<CR>
 
 "-------------------------------------------------------------------------------
-" QUIT CURRENT BUFFER: [q
-"  Immediately exit the current buffer without saving it.
+" Plugin: Ctrl-P
 "-------------------------------------------------------------------------------
-nnoremap [q :bd!<CR>
-
-"-------------------------------------------------------------------------------
-" SUBSTITUTE SHORTHAND:
-"  Just a shorthand for starting the substitute command on the whole file
-"-------------------------------------------------------------------------------
-nnoremap S yiw:%s/\<<C-R>"\>/
-vnoremap S :s/
-
-"-------------------------------------------------------------------------------
-" FORMAT DOCUMENT:
-"  Replace tabs with 3 spaces & remove trailing spaces. Must insert
-"  control character to find original line because can't use marks because
-"  'expand' erases them.
-"-------------------------------------------------------------------------------
-noremap ,f :call Format()<CR>
-";au BufEnter *.html* noremap ,f :call HtmlFormat()<CR>
-
-"-------------------------------------------------------------------------------
-" LIST CURRENT FILE LIST AND PROMPT FOR JUMP: [l
-"-------------------------------------------------------------------------------
-"noremap [l :ls<CR>:b
-"noremap [L :ls<CR>:sb
+" List current file list and prompt for jump
 noremap [l :CtrlPBuffer<CR>
 
-"-------------------------------------------------------------------------------
-" Replace the currently selected visual area with whatever you just yanked.
-"-------------------------------------------------------------------------------
-vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
-
-"-------------------------------------------------------------------------------
-" Scroll top and bottom windows simultaneously
-"-------------------------------------------------------------------------------
-"nnoremap ?? <C-E><C-W><C-W><C-E><C-W><C-W>  " Ctrl-Down
-"nnoremap ?? <C-Y><C-W><C-W><C-Y><C-W><C-W>  " Ctrl-Up
-
-"-------------------------------------------------------------------------------
-" Inserts blank line below/above current line and stays in on current line and
-" in command mode.
-"-------------------------------------------------------------------------------
-nmap oo o<ESC>k
-nmap OO O<ESC>j
-
-"-------------------------------------------------------------------------------
-" Alt+Cursor Up and Down - Goes to next/previous error
-"-------------------------------------------------------------------------------
-"nmap ?? :cn<CR>    " Alt+Down
-"nmap ?? :cp<CR>    " Alt+Up
+let g:ctrlp_mruf_relative = 1 " show only MRU files in current working dir
+let g:ctrlp_working_path_mode='a'
+let g:ctrlp_custom_ignore = {
+\ 'dir' : '\v[\/](node_modules|dist|\.(git|svn|tmp|settings|metadata)|packages|web|web-dev|jmvc|static|wsawui/shared|sams/shared)$',
+\ 'file': '\v\.(exe|dll|sw[po]|bak|tgz|swp|tmp)'
+\}
+let g:ctrlp_mruf_exclude = "\v((.*\.(sw[po]|bak|tgz|swp|tmp))|.*\\QuickFileList|ctrlp.txt|production.js)"
+let g:ctrlp_cmd="CtrlPMRU"
+let g:ctrlp_working_path_mode="a"
 
 "===============================================================================
-"                                 VIM SETTINGS
+" AUTO COMMANDS:
 "===============================================================================
-version 4.0                   " Avoid warning for wrong version
-set number                    " Line numbers on all files
-set shellslash
-set clipboard=unnamed
-set suffixes+=.clw,.hm   " Put these suffixes at the end of completion code
-set wildignore+=*.aps,.*~,*.txe,*.plg,*.opt
-set nowrap
-set winheight=5               " minimal window height
-set complete=.,w,b,u,U,i,t
-set hlsearch                  " Highlight search string
-set tabstop=3                 " Set tabstops every 3 characters
-set shiftwidth=3              " Set shift width to 3 characters
-set shiftround                " Rounds > & < to nearest shift width
-set autowrite                 " Write file every time ESC is pressed
-set tag+=../tags
-set notagrelative             " use exact path specified in tag file (not rel.)
-set backspace=2               " Allow backspacing over everything in insert mode
-set textwidth=80              " Set width of text
-set viminfo='20,\"50          " read/write a .viminfo file, don't store more
-                              "   than 50 lines of registers
-set visualbell                " Stop that infernal racket!
-set expandtab                 " Expand the tabs to spaces
-set ruler                     " Display the column and line numbers
-set ignorecase                " Ignore case when searching
-set nosmartcase               " Override ignorecase if search pattern contains
-                              "   upper case letters
-set autoindent                " Set autoindenting on
-set smartindent               " Do smart autoindenting
-set smarttab                  " Tab shiftwidth positions in front of lines
-set cmdheight=1               " Command line height
-set comments=fb:*,fb:-,b:\",b:#   " Set comment characteristics for any file
-set formatoptions=trq         " Set comment format options for any file
-set cpoptions=$BceFs          " Vim/Vi settings
-set isfname=@,48-57,/,:,.,-,_,+,,,$,\\,~   " omit quote and add \,~
-"set grepprg=findstr\ /R\ /N\ /S " change grep program to search in subdirs file names) 
-set grepprg=c:/cygwin64/bin/grep\ -nHRs\ $*\ .\ 2>nul
 
+" JavaScript, etc.
+"-------------------------------------------------------------------------------
+au BufEnter *.js set formatoptions=croql cindent comments=b://,sr:/*,mnb:*,el:*/ cinoptions=>s,e0,n0,f0,{0,}0,^0,:s,=s,ps,ts,+s,(0,)0,*30
+au BufEnter *.mustache,*.css,*.scss set iskeyword+=-
+
+au BufEnter *.mustache call MyMustacheTags()
+function! MyMustacheTags()
+   syntax match myMustacheConditionals "[#/]\(compare\|boolIf\|showField\|displayErrors\)\>" skipwhite containedin=mustacheSection
+   syntax match myMustacheOperators "\"\(lss\|eq\|neq\|gtr\|leq\|geq\|typeof\|in\)\"" skipwhite containedin=mustacheSection
+   hi link myMustacheConditionals mustacheConditionals
+   hi link myMustacheOperators Operator
+endfun
+
+" Highlight DocumentJS tags in multiple different file type comments
+au Syntax javascript,css,scss,dosbatch call MyJsDocTags()
+function! MyJsDocTags()
+   syntax match jsDocTags containedin=.*Comment "@\(add\|alias\|body\|demo\|download\|group\|hide\|iframe\|inherits\|option\|page\|parent\|plugin\|prototype\|release\|return\|signature\|test\|typedef\|baseclass\)\>" skipwhite
+	syntax match jsDocTags containedin=.*Comment "@\(abstract\|access\|alias\|arg\|argument\|augments\|author\|borrows\|callback\|class\|classdesc\|const\|constant\|constructor\|constructs\|copyright\|default\|defaultvalue\|deprecated\|desc\|description\|emits\|enum\|event\|example\|exception\|exports\|extends\|external\|file\|fileoverview\|fires\|func\|function\|global\|host\|ignore\|implements\|inheritdoc\|inner\|instance\|interface\|kind\|lends\|license\|link\|linkcode\|linkplain\|listens\|member\|memberof\|method\|mixes\|mixin\|module\|name\|namespace\|override\|overview\|param\|private\|prop\|property\|cfg\|protected\|public\|readonly\|requires\|return\|returns\|see\|since\|static\|summary\|this\|throws\|todo\|tutorial\|tutorial\|type\|typedef\|var\|variation\|version\|virtual\)\>" skipwhite
+   hi link jsDocTags Special
+endfun
+
+" Batch files
+"--------------------------------------------------------------------------------
+au BufEnter *.bat set comments=b:REM,b:rem formatoptions=croq
+au BufEnter *.bat set keywordprg=help
+
+" Perl files
+"-------------------------------------------------------------------------------
+au FileType perl set formatoptions=croql comments=b:# cinkeys-=0#
+
+" Vim Source/Macros
+"-------------------------------------------------------------------------------
+au BufEnter *.src,vim* set comments=b:\" formatoptions=croq
+
+" Flex/ActionScript
+"-------------------------------------------------------------------------------
+au BufNewFile,BufRead *.mxml setfiletype=mxml
+au BufNewFile,BufRead *.as setfiletype=actionscript
+
+"===============================================================================
+" FUNCTIONS:
+"===============================================================================
+"-------------------------------------------------------------------------------
+" Function: GrepIt
+"-------------------------------------------------------------------------------
 fun! GrepIt(Needle, ...)
    " If we are in the NERDTree, don't replace it with Grep results, switch to
    " next window first.
+   "
    if bufname("%") == t:NERDTreeBufName
       wincmd l
    endif
 
    " Default look in js, mustache & json files
-   let l:haystack = a:0 > 0 ? a:1 : '*.{js,mustache,json}'
+   let l:haystack = a:0 > 0 ? a:1 : '*.{js,mustache,hbs,json,mxml,as}'
 
    " If an include/file pattern is given, then we can't specify an exclude, else default exclude.
-   let l:exclude = a:0 > 0 ? '' : ' --exclude={*.swp,*production.js*,style.css}'
+   let l:exclude = a:0 > 0 ? '' : ' --exclude={*.swp,production.js,style.css,\.*}'
 
-   execute "silent! grep " . a:Needle . l:exclude . " --exclude-dir={dist,lib,.svn,qaTest} --include=" . l:haystack
+   execute "silent! grep " . a:Needle . l:exclude . " --exclude-dir={dist,lib,.svn,qaTest,node_modules,tmp,vendor,bin,bin-debug,.settings,build,libs*,.metadata,mock,generation,deploy,test,jmvc,static,wsawui/shared,sams/shared} --include=" . l:haystack
    copen
 endfun
 command! -nargs=+ Grep call GrepIt(<f-args>)
 nnoremap gr :let @/=expand("<cword>")<CR>:Grep <cword><CR>
+nnoremap Gr :let @/=expand("<cword>")<CR>:Grep \b<cword>\b<CR>
 
-" Assumes that there's a list on the clipboard to parse!! Run getCommits.cmd to
-" obtain and then copy from the outputted JSON.
+"-------------------------------------------------------------------------------
+" Function: GraspIt
+" Description: Called by the command line function 'Grasp'
+" Example:
+"
+"  Search for the keyword 'initTimer'. This will return a list of finds and put
+"  them in the Quickfix list window (same as Grep). This will search our defined
+"  set of searchable directories recursively (see the GraspIt default
+"  'l:haystack' value below).
+"
+"    Grasp #initTimer
+"
+"  This will search the current file '%' for the keyword 'initTimer' AND replace
+"  all finds with 'initTimerLogout' inline.
+"
+"    Grasp #initTimer -R initTimerLogout -i %
+"
+"-------------------------------------------------------------------------------
+fun! GraspIt(Needle, ...)
+   if bufname("%") == t:NERDTreeBufName
+      wincmd l
+   endif
+
+   " Default recursive but skip those listed
+   let l:haystack = (a:0 > 0) ? join(a:000, " ") : '--recursive --exclude "dist/*,lib/*,scripts/*"'
+
+   let l:needle = fnameescape(a:Needle)
+
+   setlocal grepprg=grasp
+   execute "silent! grep --filename --no-color --no-bold " . l:needle . " " . l:haystack
+   set grepprg<
+
+   " If the inline flag is not supplied, then automatically open the Quickfix window
+   if match(l:haystack, "-i ") == -1
+      copen
+   endif
+endfun
+command! -nargs=+ Grasp call GraspIt(<f-args>)
+
+"-------------------------------------------------------------------------------
+" Function: CodeReview
+" Description: Assumes that there's a list on the clipboard to parse!! Run
+" getCommits.cmd to obtain and then copy from the outputted JSON.
+"-------------------------------------------------------------------------------
 fun! CodeReview(...) 
    " If we are in the NERDTree, don't replace it with Grep results, switch to
    " next window first.
-   if bufname("%") == t:NERDTreeBufName
+   if exists(t:NERDTreeBufName) && bufname("%") == t:NERDTreeBufName
       wincmd l
    endif
 
    try
       if a:0 == 0
-         let l:commits = substitute(strtrans(@*),'\^@\s\+','','g')
+         let l:commits = substitute(strtrans(@*),'\^@\s*','','g')
          silent execute "let l:commitList = " . l:commits
       else
          let l:commitList = a:1
@@ -253,104 +366,41 @@ fun! CodeReview(...)
    endtry
 endfun
 
-function! CodeReviewMenu()
-   execute "let l:artifactList = " . readfile("/temp/commits.json")[0]
+"-------------------------------------------------------------------------------
+" Function: CodeReviewMenu
+" Description: Present 'menu' of possible artifacts to load for code reviews.
+" Requires function CodeReview.
+"-------------------------------------------------------------------------------
+function! CodeReviewMenu(...)
+   let l:file = "/temp/commits.json"
+
+   if a:0 > 0
+      let l:file = a:1
+   endif
+
+   " This assumes that the commits file json is on a single line!! Because we
+   " output the commits in JSON format, there should be an ARRAY of artifact
+   " objects (containing an array of individual commits) that VIM will interpret
+   " as a "List" because they are surrounded by square brackets.
+   execute "let l:artifactList = " . readfile(l:file)[0]
 
    let l:choices = []
 
    let l:ndx = 1
    for artf in artifactList
-      call add(l:choices, l:ndx . artf.story)
+      let l:storyNum = l:ndx . artf.story
+
+      call add(l:choices, l:storyNum)
       let l:ndx = l:ndx + 1
    endfor
 
    let l:choiceString = join(l:choices, "\n") 
    let l:chosen = confirm("Choose the Story to review:", l:choiceString)
-   "let l:storyNdx = l:choices[l:chosen-1]
 
-   call CodeReview(l:artifactList[l:chosen-1].paths)
-endfun
-
-
-"-------------------------------------------------------------------------------
-" ERROR FORMAT STRINGS
-"-------------------------------------------------------------------------------
-"-------------------------------------------------------------------------------
-"set errorformat=%f:%l:%m
-
-"===============================================================================
-"                                AUTO COMMANDS
-"===============================================================================
-
-au BufEnter *.js set formatoptions=croql cindent comments=b://,sr:/*,mnb:*,el:*/ cinoptions=>s,e0,n0,f0,{0,}0,^0,:s,=s,ps,ts,+s,(0,)0,*30
-au BufEnter *.mustache,*.css,*.scss set iskeyword+=- 
-
-"--------------------
-" Batch files
-"--------------------
-au BufEnter *.bat set comments=b:REM,b:rem formatoptions=croq
-au BufEnter *.bat set keywordprg=help
-
-au Syntax javascript,css,scss call MyDocumentJsTags()
-function! MyDocumentJsTags()
-   syntax match jsDocTags containedin=.*Comment "@\(add\|alias\|body\|demo\|download\|group\|hide\|iframe\|inherits\|option\|page\|parent\|plugin\|prototype\|release\|return\|signature\|test\|typedef\|baseclass\)\>" skipwhite
-	syntax match jsDocTags containedin=.*Comment "@\(abstract\|access\|alias\|arg\|argument\|augments\|author\|borrows\|callback\|class\|classdesc\|const\|constant\|constructor\|constructs\|copyright\|default\|defaultvalue\|deprecated\|desc\|description\|emits\|enum\|event\|example\|exception\|exports\|extends\|external\|file\|fileoverview\|fires\|func\|function\|global\|host\|ignore\|implements\|inheritdoc\|inner\|instance\|interface\|kind\|lends\|license\|link\|linkcode\|linkplain\|listens\|member\|memberof\|method\|mixes\|mixin\|module\|name\|namespace\|override\|overview\|param\|private\|prop\|property\|cfg\|protected\|public\|readonly\|requires\|return\|returns\|see\|since\|static\|summary\|this\|throws\|todo\|tutorial\|tutorial\|type\|typedef\|var\|variation\|version\|virtual\)\>" skipwhite
-   "syntax region cssComment start=+/\*+ end=+\*/+ fold contains=@Spell,jsDocTags
-   hi link jsDocTags Special
-endfun
-
-augroup vimrc_todo
-   au!
-   au Syntax * syn match MyTodo contained /\v<(NOTE|TODO|FUTURE|SCOTT|SERWIN|ERWIN|mah|MAH)/
-         \ containedin=.*Comment.*
-augroup END
-hi def link MyTodo Todo
-
-"--------------------
-" Perl files
-"--------------------
-au FileType perl set formatoptions=croql comments=b:# cinkeys-=0#
-
-"--------------------
-" Vim Source/Macros
-"--------------------
-au BufEnter *.src,vim* set comments=b:\" formatoptions=croq
-"au BufEnter *.src,*.vim,vim* :let sreg=@/nmap [[ ?^fun?:let @/=sreg
-"au BufEnter *.src,*.vim,vim* :let sreg=@/nmap ]] /^fun/:let @/=sreg
-"au BufEnter *.rc nmap [[ :let sreg=expand(@/)?^BEGIN?:let @/=sreg
-"au BufEnter *.rc nmap ]] :let sreg=expand(@/)/^BEGIN/:let @/=sreg
-"au BufLeave *.src,*.vim,vim* nunmap [[
-"au BufLeave *.src,*.vim,vim* nunmap ]]
-"au BufLeave *.rc nunmap [[
-"au BufLeave *.rc nunmap ]]
-
-"-------------------------------------------------------------------------------
-" Doskey abbreviations set up as command line abbreviations - use doskey.awk to
-" recreate.
-"-------------------------------------------------------------------------------
-so $BIN\doskey.vim
-
-"===============================================================================
-" I'm testing these...
-"===============================================================================
-vnoremap p "_d:norm ""p<CR>
-vnoremap P "_d:norm ""P<CR>
-inoremap  <ESC>bdwa
-
-" Typo
-cmap e1 e!
-" Big window
-"cmap bw set columns=150<CR>
-" Little window
-"cmap lw set columns=80<CR>
-
-"function! HtmlFormat()
-"   norm mz
-"   %s/\s\+$//e " Remove trailing whitespace on all lines
-"   %g/^$/d     " Delete empty lines
-"   norm `z3k
-"   echo "Formatting Done!"
-"endf
+   if l:chosen > 0
+      silent call CodeReview(l:artifactList[l:chosen-1].paths)
+   endif
+endf
 
 "-------------------------------------------------------------------------------
 " Function: Artifacts
@@ -358,6 +408,9 @@ cmap e1 e!
 " for SVN. This is a Teamforge requirement.
 "
 " artifacts.txt is in format:
+"
+" Make sure to put the dash!!---------V
+"
 "     #.<TAB>[artfNNNNNNN]<TAB>Story# - StoryDescription
 "-------------------------------------------------------------------------------
 function! Artifacts()
@@ -381,25 +434,10 @@ function! Artifacts()
    endif
 endf
 
-"command! -range=% -nargs=0 Space2Tab execute "<line1>,<line2>s/^\\( \\{".&ts."\\}\\)\\+/\\=substitute(submatch(0), ' \\{".&ts."\\}', '\\t', 'g')"
-
-au BufNewFile,BufRead *.mxml setfiletype=mxml
-au BufNewFile,BufRead *.as setfiletype=actionscript
-au BufNewFile,BufRead hangout*xml set filetype=google_gadgets
-
 "-------------------------------------------------------------------------------
-" My syntax
+" Function: Shell
+" Description: Run a command have have the output directed to a scratch buffer
 "-------------------------------------------------------------------------------
-so $VIM/vimfiles/after/syntax/mysyntax.vim
-
-hi Comment guifg=DarkGreen ctermfg=DarkGreen
-
-"let g:SuperTabDefaultCompletionType = 'context'
-"autocmd FileType *
-"   \ if &omnifunc != '' |
-"   \   call SuperTabChain(&omnifunc, "<c-p>") |
-"   \ endif
-
 command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
 function! s:RunShellCommand(cmdline)
   echo a:cmdline
@@ -418,8 +456,12 @@ function! s:RunShellCommand(cmdline)
   call setline(3,substitute(getline(2),'.','=','g'))
   execute '$read !'. expanded_cmdline
   setlocal nomodifiable
-endfunction
+endf
 
+"-------------------------------------------------------------------------------
+" Function: SvnIt
+" Description: Run the svn command with Shell function
+"-------------------------------------------------------------------------------
 function! s:SvnIt(cmd, ...) 
    call s:RunShellCommand('svn '.a:cmd.' '.join(a:000))
 
@@ -427,20 +469,21 @@ function! s:SvnIt(cmd, ...)
       setlocal filetype=svnlog
       norm gg
    endif
-endfunction
+endf
 
-command! -complete=file -nargs=* Git call s:RunShellCommand('git '.<q-args>)
 command! -complete=file -nargs=* Svn call s:SvnIt(<f-args>)
-map <Leader>nf :NERDTreeFind<CR>
+command! -complete=file -nargs=* Git call s:RunShellCommand('git '.<q-args>)
 
-let g:ctrlp_working_path_mode='a'
-let g:ctrlp_custom_ignore = {
-\ 'dir' : '\v[\/](node_modules|dist|\.(git|svn|tmp|settings|metadata)|packages|web|web-dev)$',
-\ 'file': '\v\.(exe|dll|sw[po]|bak|tgz|swp|tmp)'
-\}
-let g:ctrlp_mruf_exclude = "\v((.*\.(sw[po]|bak|tgz|swp|tmp))|.*\\QuickFileList|ctrlp.txt)"
-let g:ctrlp_cmd="CtrlPMRU"
+map <Leader>sc :!svn commit %<CR>
+map <Leader>sd :!svn diff %<CR>
+map <Leader>sD :!svn diff -rPREV:COMMITTED %<CR>
+map <Leader>sl :Svn log %<CR>
+command! Sup :!svn update<CR>
 
+"-------------------------------------------------------------------------------
+" Function: Incr
+" Description: Increment the selected range ?
+"-------------------------------------------------------------------------------
 function! Incr()
   let a = line('.') - line("'<")
   let c = virtcol("'<")
@@ -448,8 +491,65 @@ function! Incr()
     execute 'normal! '.c.'|'.a."\<C-a>"
   endif
   normal `<
-endfunction
+endf
 vnoremap <C-a> :call Incr()<CR>
+
+"-------------------------------------------------------------------------------
+" Description: Miscellaneous
+"-------------------------------------------------------------------------------
+au BufWinEnter *.htm*,*.js[(on)]* silent loadview
+
+" Popup menu styling
+highlight Pmenu ctermbg=Gray guibg=Gray
+highlight PmenuSel guibg=DarkBlue ctermbg=DarkBlue guifg=Yellow ctermfg=Yellow
+
+" Miscellaneous typo fixes
+cab wq1 wq!
+cab q1 q!
+cmap e1 e!
+iab toLowercase toLowerCase
+iab toUppercase toUpperCase
+
+" ??
+vnoremap p "_d:norm ""p<CR>
+vnoremap P "_d:norm ""P<CR>
+
+" Show syntax of item under cursor
+noremap <F4> :echo synIDattr(synID(line("."), col("."), 1), "name")<CR>
+" Toggle highlight searches
+noremap <F5> :call ToggleOption('hlsearch')<CR>
+" Next file
+noremap <F7> :bNext<CR>     " Previous buffer
+" Previous file
+noremap <F8> :bnext<CR>     " Next buffer
+
+" Shorthand for starting the substitute command on the whole file or in visual select mode
+nnoremap S yiw:%s/\<<C-R>"\>/
+vnoremap S :s/
+
+" Replace the currently selected visual area with whatever you just yanked.
+vnoremap p <Esc>:let current_reg = @"<CR>gvdi<C-R>=current_reg<CR><Esc>
+
+" Inserts blank line below/above current line and stays in on current line and in command mode.
+nmap oo o<ESC>k
+nmap OO O<ESC>j
 
 inoremap <C-Space> <C-x><C-o>
 inoremap <C-@> <C-Space>
+
+"--------------------------------------------------------------------------------
+" Deprecated
+"--------------------------------------------------------------------------------
+
+" Format document using tlib:Format
+"noremap ,f :call Format()<CR>
+
+" Immediately exit the current buffer without saving it.
+"nnoremap [q :bd!<CR>
+
+"-------------------------------------------------------------------------------
+" Scroll top and bottom windows simultaneously
+"-------------------------------------------------------------------------------
+"nnoremap ?? <C-E><C-W><C-W><C-E><C-W><C-W>  " Ctrl-Down
+"nnoremap ?? <C-Y><C-W><C-W><C-Y><C-W><C-W>  " Ctrl-Up
+

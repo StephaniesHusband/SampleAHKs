@@ -4,6 +4,7 @@
 
 Menu, Tray, Icon, ubernagkill.Ico
 GroupAdd, waitOnThese, McAfee Customer Submission
+GroupAdd, waitOnThese, meetup.fedex.com says
 GroupAdd, waitOnThese, Clear Browser Cache ; Internet Explorer prompt
 GroupAdd, waitOnThese, Problem Occurred
 GroupAdd, waitOnThese, Trial Version
@@ -17,7 +18,6 @@ GroupAdd, waitOnThese, Microsoft Office Outlook Security Notice
 GroupAdd, waitOnThese, Microsoft Outlook Security Notice
 GroupAdd, waitOnThese, Java Security Warning
 GroupAdd, waitOnThese, Enterprise Password
-GroupAdd, waitOnThese, SSO Login - 
 ;GroupAdd, waitOnThese, loadzilla login - 
 GroupAdd, waitOnThese, Information
 GroupAdd, waitOnThese, Login, Sym4a.Prod.fedex.com
@@ -66,7 +66,7 @@ Loop
    ;---------------------------------------------------------------------------------------
    ; Needs {ENTER} only
    ;---------------------------------------------------------------------------------------
-   If WinActive("Remove Activity") or WinActive("Web Server Authentication") or WinActive("Proxy Authentication")
+   If WinActive("Remove Activity") or WinActive("Web Server Authentication") or WinActive("Proxy Authentication") or WinActive("meetup.fedex.com says")
    {
       Send, {ENTER}
       WinWaitClose
@@ -108,14 +108,6 @@ Loop
    ;---------------------------------------------------------------------------------------
    ; Needs UserIdAndPassword only (no pauses)
    ;---------------------------------------------------------------------------------------
-   if WinActive("SSO Login")
-   {
-      Sleep, 1000
-
-      UserIdAndPassword()
-      WinWaitClose
-      Continue
-   }
    IfWinActive, Login, Sym4a.Prod.fedex.com
    {
       PasswordOnly()
