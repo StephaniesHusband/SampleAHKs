@@ -45,13 +45,15 @@ fs.readFile(process.argv[3], function(err, data) {
                         // along with the commit msg (which will be duplicated
                         // for each path).
                         .rollup(function(revs) {
-                           // "revs" is an array of every revision entries for a
+                           // "revs" is an array of every revision entry for a
                            // commit author
                            return [].concat.apply([], revs.map(function(rev) {
                               // "paths" should be an array of 1. "path" is an
                               // array of 1+ with the paths to the files that
                               // were committed.
-                              return rev.paths[0].path.map(function(path) {
+                              return rev.paths[0].path.filter(function(p) {
+                                 return p["$"].kind === "file";
+                              }).map(function(path) {
                                  // Create an object to return both the msg and
                                  // the file that was committed.
                                  return {
@@ -66,7 +68,7 @@ fs.readFile(process.argv[3], function(err, data) {
       // Now filter out all but the chosen dev (argv #2). This is optional. If
       // you wanted everyone's commits, skip this step.
       var dev = revByDev.filter(function(rev) {
-         return rev.key === process.argv[2];
+         return rev.key === process.argv[2]; // "key" and "arg2" are the employee # of the dev you want
       });
 
       // Now Group all the chosen dev's check-ins by artifact
@@ -77,48 +79,32 @@ fs.readFile(process.argv[3], function(err, data) {
          })
          .entries(dev[0].value);
 
-      // Helper function for various types of output formats.  The latest
-      // incarnation that gives you an array of dictionary objects for VIM's
-      // Quickfix is #3.
+      // Helper function for various types of output formats.  The latest incarnation that gives you an array of dictionary
+      // objects for VIM's Quickfix is #3.
       var formatCommits = function(commits, format) {
          switch (format) {
-            // This format is just a unique sorted array of commit paths (no
-            // commit messages).
+            // This format is just a unique sorted array of commit paths (no commit messages).
             case 1: 
                return remove_duplicates(commits, "path").sort();
 
-            // This format is a non-unique, sorted array of commit paths but in
-            // the quickfix format "file:line#:message".  You can save this to a
-            // file and manually load up into VIM with "cfile" command.  You
-            // will need the appropriate errorformat pattern defined for
-            // Quickfix to recognize the pattern.
+            // This format is a non-unique, sorted array of commit paths but in the quickfix format "file:line#:message".
+            // You can save this to a file and manually load up into VIM with "cfile" command.  You will need the appropriate
+            // errorformat pattern defined for Quickfix to recognize the pattern.
             case 2: 
                return commits.map(function(a) {
                   return a.path.substr(a.path.indexOf("/", 11)+1)  + ":1:" + a.msg.substr(a.msg.indexOf(":")+2);
                }).sort();
 
-            // This is current iteration that creates an array (in Vim...List)
-            // of objects (in Vim...Dictionaries) so that you can use
-            // setqflist() to load up the Quickfix list (bypassing the need for
-            // an appropriate errorformat defined). To use this method, open the
-            // output and copy the array you want to code review from the
-            // opening '[' to the closing ']'.  You will then go into Vim and
-            // run (the previously defined) function "CodeReview" using ":call
-            // CodeReview()".  That command knows to look on the clipboard for
-            // somethingn in the appropriate format.
+            // This is current iteration that creates an array (in Vim...List) of objects (in Vim...Dictionaries) so that you
+            // can use setqflist() to load up the Quickfix list (bypassing the need for an appropriate errorformat
+            // defined). To use this method, open the output and copy the array you want to code review from the opening
+            // '[' to the closing ']'.  You will then go into Vim and run (the previously defined) function "CodeReview"
+            // using ":call CodeReview()".  That command knows to look on the clipboard for something in the appropriate
+            // format.
             case 3: 
-               return commits.filter(function(a) {
-                  try {
-                     // Only return the commits that are files
-                     var stats = fs.statSync(a.path.substr(a.path.indexOf("/", 11)+1));
-                     return stats.isFile();
-                  }
-                  catch(err) {
-                     return false;
-                  }
-               }).map(function(a) {
+               return commits.map(function(a) {
                   return {
-                     "filename": a.path.substr(a.path.indexOf("/", 11)+1),
+                     "filename": a.path.substr(a.path.indexOf("/", 7)+1), // or 11 if not in wsawui/sams root!
                      "lnum" : "1",
                      "text": a.msg.substr(a.msg.indexOf(":")+2)
                   };
@@ -131,10 +117,13 @@ fs.readFile(process.argv[3], function(err, data) {
       // Format the final output in the format you desire (using formatCommits
       // with appropriate format type). This will also output the artifact # and
       // the story # so that you will know which commits are which.
+      var otherCount = 1;
       var formatted = byArtifact.map(function(artifact) {
+         var storyNum = artifact.values[0].msg.substring(artifact.values[0].msg.indexOf("(")+1, artifact.values[0].msg.indexOf(")")) || artifact.key; //"Other"+otherCount++;
+
          return {
             artifact: artifact.key,
-            story: artifact.values[0].msg.substring(artifact.values[0].msg.indexOf("(")+1, artifact.values[0].msg.indexOf(")")),
+            story: storyNum,
             paths: formatCommits(artifact.values, 3)
          };
       });
