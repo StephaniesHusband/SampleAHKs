@@ -3,6 +3,7 @@
 ;SetTitleMatchMode, 3 ; exact match
 
 Menu, Tray, Icon, ubernagkill.Ico
+GroupAdd, waitOnThese, Skype for Business
 GroupAdd, waitOnThese, McAfee Customer Submission
 GroupAdd, waitOnThese, meetup.fedex.com says
 GroupAdd, waitOnThese, Clear Browser Cache ; Internet Explorer prompt
@@ -61,6 +62,15 @@ Loop
    {
       SelectAll()
       UserIdAndPassword()
+      Continue
+   }
+   ;---------------------------------------------------------------------------------------
+   ; Needs 'o' only
+   ;---------------------------------------------------------------------------------------
+   If WinActive("Skype for Business")
+   {
+      Send, o
+      WinWaitClose
       Continue
    }
    ;---------------------------------------------------------------------------------------

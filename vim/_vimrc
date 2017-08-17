@@ -357,6 +357,7 @@ fun! CodeReview(...)
       if len(l:commitList) > 0
          if has_key(l:commitList[0], "filename")
             call setqflist(l:commitList)
+            call setqflist([], 'a', {'title': 'Code Review'})
             copen
             cc 1
          endif

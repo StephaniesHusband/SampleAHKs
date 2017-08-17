@@ -106,7 +106,8 @@ fs.readFile(process.argv[3], function(err, data) {
                   return {
                      "filename": a.path.substr(a.path.indexOf("/", 7)+1), // or 11 if not in wsawui/sams root!
                      "lnum" : "1",
-                     "text": a.msg.substr(a.msg.indexOf(":")+2)
+                     "text": a.msg.substr(a.msg.indexOf(":")+2),
+                     "type": "I"
                   };
                }).sort(function(a, b) {
                   return a.filename.localeCompare(b.filename);
