@@ -34,7 +34,6 @@ GroupAdd, waitOnThese, Authentication Required
 #Include c:\Bin
 #Include Utility.ahk
 #Include UserAndPwd.ahk
-#Include eGrid.ahk
 
 doCPECLogin = true
 doQC = true
@@ -62,15 +61,6 @@ Loop
    {
       SelectAll()
       UserIdAndPassword()
-      Continue
-   }
-   ;---------------------------------------------------------------------------------------
-   ; Needs 'o' only
-   ;---------------------------------------------------------------------------------------
-   If WinActive("Skype for Business")
-   {
-      Send, o
-      WinWaitClose
       Continue
    }
    ;---------------------------------------------------------------------------------------

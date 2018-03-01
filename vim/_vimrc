@@ -14,6 +14,7 @@
 "===============================================================================
 filetype plugin indent on
 syntax on
+syntax sync minlines=100
 version 4.0                       " Avoid warning for wrong version
 
 let mapleader=","
@@ -27,13 +28,13 @@ set suffixes+=.clw,.hm            " Put these suffixes at the end of completion 
 set wildignore+=*.aps,.*~,*.txe,*.plg,*.opt
 set nowrap
 set winheight=5                   " minimal window height
-set complete=.,w,b,u,U,i,t        
+set complete=.,w,b,u,U,i,t
 set hlsearch                      " Highlight search string
 set tabstop=3                     " Set tabstops every 3 characters
 set shiftwidth=3                  " Set shift width to 3 characters
 set shiftround                    " Rounds > & < to nearest shift width
 set autowrite                     " Write file every time ESC is pressed
-set tag+=../tags                  
+set tag+=../tags
 set notagrelative                 " use exact path specified in tag file (not rel.)
 set backspace=2                   " Allow backspacing over everything in insert mode
 set textwidth=125                 " Set width of text
@@ -57,6 +58,8 @@ set listchars=eol:$,tab:→·,trail:▓
 "===============================================================================
 " PLUGINS, MACROS, LIBRARIES, SYNTAX, etc.
 "===============================================================================
+
+packadd! matchit
 
 "-------------------------------------------------------------------------------
 " Library: Doskey abbreviations set up as command line abbreviations - use
@@ -84,7 +87,26 @@ hi def link MyTodo Todo
 "-------------------------------------------------------------------------------
 nnoremap <silent> <M-j> :MultipleCursorsFind <C-R>/<CR>
 vnoremap <silent> <M-j> :MultipleCursorsFind <C-R>/<CR>
-let g:multi_cursor_next_key='<M-n>'
+"let g:multi_cursor_use_default_mapping=0
+"let g:multi_cursor_start_key='g<M-n>'
+"let g:multi_cursor_start_word_key='<M-n>'
+"let g:multi_cursor_next_key='<M-n>'
+"let g:multi_cursor_prev_key='<M-p>'
+"let g:multi_cursor_skip_key='<M-x>'
+"let g:multi_cursor_quit_key='<Esc>'
+
+"--------------------------------------------------------------------------------
+" Plugin: vim-airline
+"--------------------------------------------------------------------------------
+"let g:airline_powerline_fonts=1
+let g:airline_symbols_ascii=1
+let b:airline_whitespace_checks = [ 'indent', 'trailing', 'mixed-indent-file' ]
+let g:airline_skip_empty_sections=1
+
+"--------------------------------------------------------------------------------
+" Plugin: Vim Indent Guides
+"--------------------------------------------------------------------------------
+let g:indent_guides_enable_on_vim_startup=1
 
 "--------------------------------------------------------------------------------
 " Plugin: markdown
@@ -110,7 +132,7 @@ function SenseAwareSyntastic()
    let g:syntastic_always_populate_loc_list = 1
    let g:syntastic_loc_list_height = 5
    let g:syntastic_auto_loc_list = 1
-   let g:syntastic_check_on_open = 1
+   let g:syntastic_check_on_open = 0
    let g:syntastic_check_on_wq = 1
    let g:syntastic_aggregate_errors = 1
 
@@ -146,9 +168,9 @@ let g:mustache_abbreviations=1
 "-------------------------------------------------------------------------------
 " Plugin: nerdtree and nerdtree plugins
 "-------------------------------------------------------------------------------
-let NERDTreeIgnore=['apple.*png','favicon*','node_modules','jmvc','static']
+let NERDTreeIgnore=["apple.*png","favicon*","node_modules","jmvc","static"]
 let g:NERDTreeShowGitStatus=0
-let g:NERDTreeShowSvnStatus=1
+let g:NERDTreeShowSvnStatus=0 " temporarily turn off 
 let g:NERDTreeUpdateOnWrite=0
 let g:NERDTreeMinimalUI=1
 
@@ -156,17 +178,22 @@ let g:NERDTreeMinimalUI=1
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 au FileType nerdtree hi CursorLine ctermbg=yellow ctermfg=black
-map <C-n> :NERDTreeToggle<CR>
 
 " close vim if only window left open is NERDTree
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
+map <Leader>nt :NERDTreeToggle<CR>
 map <Leader>nf :NERDTreeFind<CR>
+
+"-------------------------------------------------------------------------------
+" Plugin: vim-closetag
+"-------------------------------------------------------------------------------
+let g:closetag_filenames = '*.html,*.mustache'
 
 "-------------------------------------------------------------------------------
 " Plugin: vim-javascript
 "-------------------------------------------------------------------------------
-" nothing
+"nothing
 
 "-------------------------------------------------------------------------------
 " Plugin: align
@@ -246,7 +273,7 @@ endfun
 au Syntax javascript,css,scss,dosbatch call MyJsDocTags()
 function! MyJsDocTags()
    syntax match jsDocTags containedin=.*Comment "@\(add\|alias\|body\|demo\|download\|group\|hide\|iframe\|inherits\|option\|page\|parent\|plugin\|prototype\|release\|return\|signature\|test\|typedef\|baseclass\)\>" skipwhite
-	syntax match jsDocTags containedin=.*Comment "@\(abstract\|access\|alias\|arg\|argument\|augments\|author\|borrows\|callback\|class\|classdesc\|const\|constant\|constructor\|constructs\|copyright\|default\|defaultvalue\|deprecated\|desc\|description\|emits\|enum\|event\|example\|exception\|exports\|extends\|external\|file\|fileoverview\|fires\|func\|function\|global\|host\|ignore\|implements\|inheritdoc\|inner\|instance\|interface\|kind\|lends\|license\|link\|linkcode\|linkplain\|listens\|member\|memberof\|method\|mixes\|mixin\|module\|name\|namespace\|override\|overview\|param\|private\|prop\|property\|cfg\|protected\|public\|readonly\|requires\|return\|returns\|see\|since\|static\|summary\|this\|throws\|todo\|tutorial\|tutorial\|type\|typedef\|var\|variation\|version\|virtual\)\>" skipwhite
+   syntax match jsDocTags containedin=.*Comment "@\(abstract\|access\|alias\|arg\|argument\|augments\|author\|borrows\|callback\|class\|classdesc\|const\|constant\|constructor\|constructs\|copyright\|default\|defaultvalue\|deprecated\|desc\|description\|emits\|enum\|event\|example\|exception\|exports\|extends\|external\|file\|fileoverview\|fires\|func\|function\|global\|host\|ignore\|implements\|inheritdoc\|inner\|instance\|interface\|kind\|lends\|license\|link\|linkcode\|linkplain\|listens\|member\|memberof\|method\|mixes\|mixin\|module\|name\|namespace\|override\|overview\|param\|private\|prop\|property\|cfg\|protected\|public\|readonly\|requires\|return\|returns\|see\|since\|static\|summary\|this\|throws\|todo\|tutorial\|tutorial\|type\|typedef\|var\|variation\|version\|virtual\)\>" skipwhite
    hi link jsDocTags Special
 endfun
 
@@ -286,9 +313,9 @@ fun! GrepIt(Needle, ...)
    let l:haystack = a:0 > 0 ? a:1 : '*.{js,mustache,hbs,json,mxml,as}'
 
    " If an include/file pattern is given, then we can't specify an exclude, else default exclude.
-   let l:exclude = a:0 > 0 ? '' : ' --exclude={*.swp,production.js,style.css,\.*}'
+   let l:exclude = a:0 > 0 ? '' : ' --exclude={*.swp,production.js,style.css,styleguide.css,\.*}'
 
-   execute "silent! grep " . a:Needle . l:exclude . " --exclude-dir={dist,lib,.svn,qaTest,node_modules,tmp,vendor,bin,bin-debug,.settings,build,libs*,.metadata,mock,generation,deploy,test,jmvc,static,wsawui/shared,sams/shared} --include=" . l:haystack
+   execute "silent! grep " . a:Needle . l:exclude . " --exclude-dir={dist,lib,.svn,qaTest,node_modules,tmp,vendor,bin,bin-debug,.settings,build,libs*,.metadata,mock,generation,deploy,test,jmvc,static,web,wsawui/shared,sams/shared} --include=" . l:haystack
    copen
 endfun
 command! -nargs=+ Grep call GrepIt(<f-args>)
@@ -313,33 +340,33 @@ nnoremap Gr :let @/=expand("<cword>")<CR>:Grep \b<cword>\b<CR>
 "    Grasp #initTimer -R initTimerLogout -i %
 "
 "-------------------------------------------------------------------------------
-fun! GraspIt(Needle, ...)
-   if bufname("%") == t:NERDTreeBufName
-      wincmd l
-   endif
-
-   " Default recursive but skip those listed
-   let l:haystack = (a:0 > 0) ? join(a:000, " ") : '--recursive --exclude "dist/*,lib/*,scripts/*"'
-
-   let l:needle = fnameescape(a:Needle)
-
-   setlocal grepprg=grasp
-   execute "silent! grep --filename --no-color --no-bold " . l:needle . " " . l:haystack
-   set grepprg<
-
-   " If the inline flag is not supplied, then automatically open the Quickfix window
-   if match(l:haystack, "-i ") == -1
-      copen
-   endif
-endfun
-command! -nargs=+ Grasp call GraspIt(<f-args>)
+"fun! GraspIt(Needle, ...)
+"   if bufname("%") == t:NERDTreeBufName
+"      wincmd l
+"   endif
+"
+"   " Default recursive but skip those listed
+"   let l:haystack = (a:0 > 0) ? join(a:000, " ") : '--recursive --exclude "dist/*,lib/*,scripts/*"'
+"
+"   let l:needle = fnameescape(a:Needle)
+"
+"   setlocal grepprg=grasp
+"   execute "silent! grep --filename --no-color --no-bold " . l:needle . " " . l:haystack
+"   set grepprg<
+"
+"   " If the inline flag is not supplied, then automatically open the Quickfix window
+"   if match(l:haystack, "-i ") == -1
+"      copen
+"   endif
+"endfun
+"command! -nargs=+ Grasp call GraspIt(<f-args>)
 
 "-------------------------------------------------------------------------------
 " Function: CodeReview
 " Description: Assumes that there's a list on the clipboard to parse!! Run
 " getCommits.cmd to obtain and then copy from the outputted JSON.
 "-------------------------------------------------------------------------------
-fun! CodeReview(...) 
+fun! CodeReview(...)
    " If we are in the NERDTree, don't replace it with Grep results, switch to
    " next window first.
    if exists(t:NERDTreeBufName) && bufname("%") == t:NERDTreeBufName
@@ -395,11 +422,21 @@ function! CodeReviewMenu(...)
       let l:ndx = l:ndx + 1
    endfor
 
-   let l:choiceString = join(l:choices, "\n") 
+   let l:choiceString = join(l:choices, "\n")
    let l:chosen = confirm("Choose the Story to review:", l:choiceString)
 
    if l:chosen > 0
-      silent call CodeReview(l:artifactList[l:chosen-1].paths)
+      " Look to see if we have previously used EditQF to modify the code review quickfix and saved to /temp/<story#>. If so
+      " load up QF with that file instead.
+      let l:pth = "/temp/" . l:artifactList[l:chosen-1].story
+
+      if (filereadable(l:pth))
+         execute "QFLoad! " . l:pth
+         copen
+         cc 1
+      else
+         silent call CodeReview(l:artifactList[l:chosen-1].paths)
+      endif
    endif
 endf
 
@@ -463,7 +500,7 @@ endf
 " Function: SvnIt
 " Description: Run the svn command with Shell function
 "-------------------------------------------------------------------------------
-function! s:SvnIt(cmd, ...) 
+function! s:SvnIt(cmd, ...)
    call s:RunShellCommand('svn '.a:cmd.' '.join(a:000))
 
    if a:cmd == "log"
@@ -476,8 +513,8 @@ command! -complete=file -nargs=* Svn call s:SvnIt(<f-args>)
 command! -complete=file -nargs=* Git call s:RunShellCommand('git '.<q-args>)
 
 map <Leader>sc :!svn commit %<CR>
-map <Leader>sd :!svn diff %<CR>
-map <Leader>sD :!svn diff -rPREV:COMMITTED %<CR>
+map <Leader>sd :!start svn diff %<CR>
+map <Leader>sD :!start svn diff -rPREV:COMMITTED %<CR>
 map <Leader>sl :Svn log %<CR>
 command! Sup :!svn update<CR>
 

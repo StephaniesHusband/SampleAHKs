@@ -1,248 +1,89 @@
-[](#top) <a name="top"></a>
+## Elevate 2018 
+### Dr. Rick Rigsby
+- If you're not moving forward, you're retarding.
+- IMPACT!
+- Not going to mind if you aim high and miss, but will have real issue if you aim low and hit.
+- Master the basics!
+   - Bowl: if the soup ain't good don't invest in the restaurant
+   - Sock: if you don't know the proper way to put on your socks your feet will suffer
+   - Borg: (Bjorn) knew the basics so well he wore his opponents out
+- What are your basics?
+- Why is it your g'parents were never running around and were never late.
+- If you want to grow your capacity for listening and being a leader
+   - Examine your priorities
+   - Set a goal (identify a basic (behavior) that you need to work on)
+   - Peter Drucker (teach leaders what NOT to do)
+- Basic #1: Don't JUDGE people (evaluate, but not judge)
+- Basic #2: Show up EARLY. Rather be an hour early than a minute late!
+- Basic #3: Be KIND.
+- Basic #4: Be a SERVANT. Ego is the ast that deadens the pain of stupidity.
+- Basic #5: Be EXCELLENT - If you're going to do a job, do it right.
+   - Will Durant - We are what we repeatedly do. Excellence, then, is not an act, but a habit.
+- How you do anything is how you do everything.
 
-## 1on1 w/Amber
-_2017-08-17 15:00_
-- APEX eventually going away
-- Talked to MStewart. We are not a beta tester of new plan (coaching up/down) but have not received our objectives.
-- Go ahead and write objectives and push down.
-- I talked to her about the A2 external api client not being what i expected.
-- Need api documentation
-- Chris S moving to Director of Ops (Dale's boss). Acting mgr not decided yet.
-- Fri dessert = Mike West 5 start presentation
+## Financial Issues Conf Call 2018-02-06
+- Very good sign to see markets dropping
+- Stuff starting to settle down
+- Th/Fr lots of profit taking
+- Thinks most of volatility due to electronic trading
+- ok with starting to buy again. buy into positions already hold. LONG TERM!
+- never a bad idea to take profits
+- things are going to go "on sale". you can always buy back the positions you sell!
+- div by 6 what you're wanting to put in the market. For starters put in first 2 months
+- don't sell utilities or preferreds even if they go up if in it for income
 
-## Staff
-_2017-07-31 15:03_
-- offsite team building
-- Workday coming.
-   - APEX will be rolled out in next 2 years
-   - Need to set up bi-weekly 1on1 with Amber to prepare for the "new way" when APEX goes away
-- Suggested Course: Giving and Receiving Feedback 2017 (available in FLC)
-- Handout on employee shipping policy. Very strict--can be fired for violating it.
-   - Eligible: I, spouse and dependent children 26 years or younger
-   - Personal, non-commercial use
-   - FedEx can decline during peak
-   - 3rd party can ship to YOU on your behalf if personal, non-commercial
-   - Prohibited: parents, g'parents, etc. (non-immediate family)
-      - Any commercial process (includes eBay, Craigslist, etc.)
-      - Not even for your church or non-profit
+## Architect Mtg 2018-01-09
+### Tenets
 
-## Financial Issues Conf Call
-_2017-07-18 11:56_
-- RE: Buy List - 4 new preferred stocks
-   - Really diverse group. great buy list!
-   - Are in the "FIN"ancial sector because they are a "financial product". the preferred is a debt instrument (like a bond).
-   - Good opportunity for some income! 2018,2021,etc. but will have to wait
-   - Goal for income portfolio is still in the works.
-   - will be adding more preferreds soon
-   - Ops for buying
-   -
-- He's concerned with the disfunction in Washington.
-   - Thot the prez could do something but legislaters are getting in way
-   - No confidence in Congress save about 20 (Cotton, Cruz, Ryan, Gomer, others)
-- Concerned
-   - Traders are going to have to take a stand
-   - Tipping point--where is it.
-      - Congress really going to be this disfunctional for the entire year?
-      - If so, markets will probably pull back
-      - Thinks that pull back may happen in mid Sept/mid Oct (maybe sooner). May know by end of week.
-      - be careful.
-      - not looking to get out or change AA models
-      - this is only a warning
-         - if you want to get out, get out.
-      - **HIS OPINION don't get out if you are IN IT FOR LONG TERM**
-         - Those that are sticking it out are in a good place
-            - Opportunities to buy coming!
-            - Oil prices will for sure coming down
-      - **If you don't have the stomach, get out TODAY!**
-- Tax reform coming this year? - not likely
-- **take profit this week!**
+### Hierarchy Vocabulary
+* Tenets
+   - Tenets drive what themes are made.
+   - More than 1 tenet can drive themes.
+   - Hierarchy of concrete implentations (tactical direction)
+      - Themes
+      - Features
+      - Stories
+      - Tasks
 
-## Agile in Life
-_2017-07-11 @ 11:34_
-- Planning leads to stress (at least dave's family)
-- Tools
-   - Kanban & information radiators
-   - Calendaring
-   - Trello
-- Agile Family Manifesto
-   - Video: https://goo.gl/IKYEqZ
-   - Adapt all the time.
-      - Build in a system of change so that you can react
-         - Be flexible
-         - Be open-minded
-   - Empower your children
-      - Reverse the workflow
-      - Give them practice in being independent
-      - Plan their own goals
-      - Evaluate
-      - Take control over their own lives
-      - Succeed and fail on their own terms
-   - Tell your story
-      - Preserve the core
-      - Family mission statement
-      - Tell your kids where they came from
-      - All happy families are alike. All unhappy families are unhappy in their own way.
-- Happiness is not something we find, but something we make.
-- Take small steps
+### TENETS
+* CORPORATE COMPLIANCE
+   - Do the things necessary to keep up with corporate mandates
 
-## QA Automation Challenges
-_2017-06-19 @ 08:45am_
-- They are a sprint behind in writing tests
-- They want to be able to write tests in the same sprint as current development
+* PERFORMANCE
+   - Performance of our: Dev Tools, Build Tools, Build Infrastructure/Middleware, App/SAMS, Testing/QA
+   - Should be testable/measurable
+   - Should be visible to internal personnel as metrics
 
-## Financial Issues Conference Call
-_Tue 01/24/2017_
-- Thinks Buy List is good and going to get even better.
-   - Well diversified
-   - Real Estate will be moving out of Financials sector
-- Asset Allocation models are going to be changing soon (changes based upon the economic times)
-   - Expect the new ones to be static for a while
-- Dan does NOT care about the markets in the next 3 years.
-   - Neither should I
-   - Don't panic
-   - Believe in my strategy and the Asset Allocation models
+* SECURITY
 
-## Training: Test Driven Development
-_Wed 01/18/2017_  
-Trainer: Dave Haws
-- "Implementing Lean Software Development" (book) - Mary/Tom Poppendieck
-- "Defect" = NOT meeting customers' expectations
+* CODE QUALITY/MAINTAINABILITY/BEST PRACTICES ... name?
 
-### Unit Testing Benefits
-#### Eliminates Waste  
-_The 7 Wastes of Software Development_
-   1. Partially Done Work
-      - **Examples**
-         - Un-coded Documentation
-         - Untested Code
-         - Undocumented Code
-      - **UT/TDD Helps**
-         - Living/Executable Documentation
-         - Code not written without a test
-   2. Extra Features
-      - **Examples**
-         - Flavor of the month
-         - Gold-plating
-         - Weekend Cowboy
-      - **UT/TDD Helps**
-         - No code written without a test
-         - Tests not added without a story
-   3. Relearning
-      - **Examples**
-         - Reinventing the wheel
-         - Team member leaves
-         - "I looked at that code 6 months ago..."
-      - **UT/TDD Helps**
-         - Code "documentation" always up to date
-         - Step thru tests to learn code
-   4. Handoffs
-      - **Examples**
-         - Tossed over the wall (fire & forget)
-         - Emails & phone calls
-         - Functional silos
-      - **UT/TDD Helps**
-         - Ping-pong pairing (not directlry related to TDD)
-         - Agile has much more to say...
-   5. Task Switching
-      - **Examples**
-         - Multi-tasking
-            - Any new projects you add = 20% of time lost to context-switching
-            - e.g., 3 projects = 60% time loss
-         - Fighting fires
-         - "Do you have a couple of minutes?"
-      - **UT/TDD Helps**
-         - Finer grained tasks
-         - Built-in context dump
-   6. Delays
-      - **Examples**
-         - Long feedback loop
-         - Deadline of another team missed
-         - Waiting for a test run to pass
-      - **UT/TDD Helps**
-         - Mocks, stubs, fakes/fixtures
-         - Pair programming
-         - Lightning-fast tests
-         - Finer-grained tasks
-   7. Defects
-      - **Examples**
-         - Bugs
-         - Customers not happy
-         - Integration problems
-      - **UT/TDD Helps**
-         - Code is always tested!
-         - Short feedback loops
-         - Lightning-fast tests
+* ANALYSIS
+   * Internal: We should always be analyzing our product/processes so that we can improve OUR product/processes/performance.
+   * External: We should be analyzing how our customers are using our product so that we can provide guidance/feedback/input
+     to improve THEIR processes.
+   - Metrics, Analytics
+   - Should be measurable/predictable (metrics)
+   - Our analysis metrics should drive feedback to both internal personnel & customer
 
-#### Shortens Feedback Loop
-- Provides instant feedback
-- Confidence booster
-- Reliable documentation
+* QUALITY
+   * We should always be looking to improve software quality through testing, performance, code coverage
+   - Measurable (metrics)
 
-#### Streamlines Development
-- Easier to write robust code
-- Helpful design tool
-- Act as probes when solving problems
-- Learning Aid
+* INNOVATION
+   * "Where there is no vision, the people perish." - Proverbs 29:18a
+   * We should always be innovating, experimenting and looking months/years ahead of where we are now
 
-### Unit Testing Best Practices
-_What Are Good Unit Tests?_
-   - Fast, Isolated, Repeatable, Self-validating, Timely (FIRST)
-   - Automatic, Thorough, Repeatable, Independent, Professional (A TRIP)
-   - Right results checked, Boundary conditions, Inverse relationships, Cross-check results, Error conditions, Performance (BICEP)
+* CUSTOMER SATISFACTION ?
 
-_Boundary conditions?_
-   - Conformance, Ordering, Range, Reference, Existence, Cardinality, Time (CORRECT)
-
-### Unit Testing Frameworks
-- xUnit frameworks...
-- Building Blocks
-   - Test case, suite, fixture, runner, Asserts
-   - Test setup/teardown
-
-### Design Principles
-
-#### SOLID
-- Single Responsibility
-- Open/Closed - you should be able to extend a class's behavior, without modifying it
-- Liskov Substitution - derived classes must be substitutable for their base classes (isa relationships -> "can substitute for"
-- Interface Segregation - clients should not be forced to depend upon interfaces that they do not use
-- Dependency Inversion - Depend on abstractions, not concretions (enables Mocks)
-
-#### Other
-- Favor composition over inheritance (think "has a" vs "is a")
-- Law of Demeter - information hiding
-- Don't call us, we'll call you - environment should handle objects's initial condition and ongoing lifecycle
-   - Inversion of control
-   - Dependency injection
-
-#### Guiding Ideas
-- KISS - Keep It Super Simple
-- Simplest
-   - Simple enough for now. Allows for future refactoring.
-- YAGNI - You Aren't Going to Need It
-- Once and Only Once
-   - Eliminate Repetition & Duplication through merciless refactoring
-- DRY - Don't Repeat Yourself
-   - Automate anything you do repetively
-   - Solve a problem once and for all
-- PIE - Program Intently & Expressively
-   - There are 2 ways of creating a software design:
-      - Make it so simple that there are obviously no deficiencies
-      - Make it so complicated that there are no obvious deficiencies (Hoare)
-- Design & Code Simply
-   - Produce software that is easy to change
-   - Change is inevitable, embrace it, and plan to adapt
-   - Unnecessary features complicate the system and are later viewed as requirements
-   - Do enough to get feedback from the customer
-
-### Pair Programming
-1. Ping-Pong Programming
-2. Promiscuous Pairing
-3. Step Pairing
-4. Cross-Functional Pairing (JS <-> Java, Dev <-> Tester, Dev <-> BA)
-
-
-
+### Example Features (Tactical things)
+----------------------------------
+- Regression Testcases: Applicable themes: PERFORMANCE, ANALYSIS, QUALITY SOFTWARE
+- Cloud Native: Themes: PERFORMANCE, QUALITY SOFTWARE
+- Continuous Development/Integration: Themes:  QUALITY SOFTWARE, INNOVATION
+- Predictive Analytics: Themes: ANALYSIS, QUALITY SOFTWARE
+- Usage Metrics (SAMS): Themes: PERFORMANCE, ANALYSIS, QUALITY SOFTWARE
+- Device Health (SAMS): Themes: ANALYSIS, QUALITY SOFTWARE
 
 <!-- Internal stylesheet -->
 <style>
@@ -270,4 +111,3 @@ _Boundary conditions?_
       color: blue;
    }
 </style>
-
